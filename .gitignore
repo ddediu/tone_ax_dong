@@ -31,6 +31,9 @@ vignettes/*.pdf
 # knitr and R markdown default cache directories
 *_cache/
 /cache/
+cached_results/*
+figures/
+tone_ax_dong_cache/
 
 # Temporary files created by R markdown
 *.utf8.md
@@ -47,3 +50,13 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Paper
+/paper/*
+
+# Data (must be requested explicitly)
+input_files/
+notes_devel.md
+
+# macos
+.DS_Store
