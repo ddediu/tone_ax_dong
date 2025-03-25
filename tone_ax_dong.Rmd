@@ -135,6 +135,7 @@ library(gridExtra); # combine multiple plots
 library(gplots); # heatmap.2
 library(sjPlot); # effect plots
 library(viridis); # color-blind-friendly palette
+library(DiagrammeR); # plotting networks
 
 # Regression and mediation analysis:
 library(lmerTest); # ML mixed-effects models
@@ -143,7 +144,7 @@ library(performance); # multicollinearity
 library(DHARMa); # check dispersion
 library(mediation); # mediation
 
-# MD5 checsums:
+# MD5 checksums:
 library(tools);
 
 
@@ -236,7 +237,7 @@ alpha_level <- 0.05;
 if( !dir.exists("./figures") ) dir.create("./figures", showWarnings=FALSE); # figures are saved here
 if( !dir.exists("./cached_results") ) dir.create("./cached_results", showWarnings=FALSE); # cache expensive results here
 
-supp_mats <- TRUE; # supplementary materials, so figure and table numberign starts with S
+supp_mats <- TRUE; # supplementary materials, so figure and table numbering starts with S
 
 ## Auxiliary functions:
 
@@ -417,6 +418,7 @@ colorize_text <- function(x, color) {
   + [Figure S67. Mediation location → education → tone (recoded dataset).](#FigS67)
   + [Figure S68. Mediation education, age, gender → working memory → tone (recoded dataset).](#FigS68)
   + [Figures S70-S77. Corresponding analyses for d' (recoded dataset).](#FigS70)
+  + [Figures S94-S99. Comparing the complex path models for % correct responses and d' on the original, recoded and removed datasets.](#FigS94)
 
 - *Tables:*
   + [Table S1. The working memory trials.](#TabS1)
@@ -586,7 +588,7 @@ At the time of data collection, the **age** of the participants was distributed 
 ggplot(d_ppts, aes(x=age, fill=gender, color=gender)) + geom_density(alpha=0.25) + geom_density(data=d_ppts, aes(x=age), alpha=0.5, color="black", fill=NA, linewidth=1.0) + scale_fill_manual(values=c("F"="red", "M"="blue")) + scale_color_manual(values=c("F"="red", "M"="blue"));
 ```
 
-It can be seen that the sample has `r round(sum(d_ppts$gender == "F")/sum(d_ppts$gender == "M"),1)` times more females than males (the *χ*^2^ test against the expected 50%:50% distribution is highly significant: *χ*^2^(`r (tmp <- chisq.test(table(d_ppts$gender), p=c(0.5, 0.5)))$parameter`) = `r round(tmp$statistic,1)`, *p*=`r scinot(tmp$p.value)`), but the ages are distributed in similar ways between the two genderes, with a bi-modal distribution suggesting two age groups: one composed of *adolescents and young adults* (centered around 20 years of age and ranging between the minimum of `r min(d_ppts$age)` and about 30 years old) and the other ("*adults*") centered around late 40s.
+It can be seen that the sample has `r round(sum(d_ppts$gender == "F")/sum(d_ppts$gender == "M"),1)` times more females than males (the *χ*^2^ test against the expected 50%:50% distribution is highly significant: *χ*^2^(`r (tmp <- chisq.test(table(d_ppts$gender), p=c(0.5, 0.5)))$parameter`) = `r round(tmp$statistic,1)`, *p*=`r scinot(tmp$p.value)`), but the ages are distributed in similar ways between the two genders, with a bi-modal distribution suggesting two age groups: one composed of *adolescents and young adults* (centered around 20 years of age and ranging between the minimum of `r min(d_ppts$age)` and about 30 years old) and the other ("*adults*") centered around late 40s.
 
 ```{r results='hide'}
 tmp <- table(d_ppts$location, useNA="no");
@@ -647,7 +649,7 @@ ggplot(d_all, aes(x=education_years, fill=location, color=location)) +
   NULL;
 ```
 
-Overall, *gender* makes a significant difference difference (*t*(`r round((tmp <- t.test(education_years ~ gender, data=d_all))$parameter,1)`)=`r round(tmp$statistic,1)`, *p*=`r scinot(tmp$p.value)`; Mann-Whitney *W*=`r round((tmp1 <- wilcox.test(education_years ~ gender, data=d_all))$statistic,1)`, *p*=`r scinot(tmp1$p.value)`), with males having `r round(tmp$estimate["mean in group M"] - tmp$estimate["mean in group F"],2)` years of formal education more than females on average (i.e., `r round(tmp$estimate["mean in group M"],2)` for males vs  `r round(tmp$estimate["mean in group F"],2)` for females).
+Overall, *gender* makes a significant difference (*t*(`r round((tmp <- t.test(education_years ~ gender, data=d_all))$parameter,1)`)=`r round(tmp$statistic,1)`, *p*=`r scinot(tmp$p.value)`; Mann-Whitney *W*=`r round((tmp1 <- wilcox.test(education_years ~ gender, data=d_all))$statistic,1)`, *p*=`r scinot(tmp1$p.value)`), with males having `r round(tmp$estimate["mean in group M"] - tmp$estimate["mean in group F"],2)` years of formal education more than females on average (i.e., `r round(tmp$estimate["mean in group M"],2)` for males vs  `r round(tmp$estimate["mean in group F"],2)` for females).
 
 Focusing on the two locations that comprise the majority of the participants, location A has significantly higher educational levels that location B (*t*(`r round((tmp <- t.test(d_all$education_years[!is.na(d_all$location) & d_all$location == "A"], d_all$education_years[!is.na(d_all$location) & d_all$location == "B"]))$parameter,1)`)=`r round(tmp$statistic,1)`, *p*=`r scinot(tmp$p.value)`; Mann-Whitney *W*=`r round((tmp1 <- wilcox.test(d_all$education_years[!is.na(d_all$location) & d_all$location == "A"], d_all$education_years[!is.na(d_all$location) & d_all$location == "B"]))$statistic,1)`, *p*=`r scinot(tmp1$p.value)`), with the participants from location A having `r round(tmp$estimate["mean of x"] - tmp$estimate["mean of y"],2)` years of formal education more than the participants from B on average (i.e., `r round(tmp$estimate["mean of x"],2)` vs  `r round(tmp$estimate["mean of y"],2)`).
 
@@ -690,7 +692,7 @@ The trials are the same across participants and vary from 3 to 7 colors, as show
 `r paste0("<div class='caption'>",capTab("The working memory trials showing their length and the color sequence. Each color may appear at most once in any give trial but can repeat across trials. The trials are fixed across all participants."),"</div>")`
 
 ```{r}
-# Convert ot the long format:
+# Convert to the long format:
 d_wm_long <- tidyr::gather(d_wm[ d_wm$ID %in% d_ppts$ID, 
                                  c("ID", "trial_01", "trial_02", "trial_03", "trial_04", "trial_05", "trial_06", "trial_07", "trial_08", "trial_09", "trial_10", "trial_11", "trial_12", "trial_13", "trial_14", "trial_15")], 
                            trial, score, trial_01:trial_15);
@@ -703,7 +705,7 @@ ggplot(d_wm_long, aes(x=score, fill=gender)) + geom_bar(position="stack", alpha=
   facet_wrap(. ~ trial, ncol=5);
 ```
 
-*gender* makes a significant difference difference (*t*(`r round((tmp <- t.test(score ~ gender, data=d_wm_long))$parameter,1)`)=`r round(tmp$statistic,1)`, *p*=`r scinot(tmp$p.value)`; Mann-Whitney *W*=`r round((tmp1 <- wilcox.test(score ~ gender, data=d_wm_long))$statistic,1)`, *p*=`r scinot(tmp1$p.value)`), with males scoring slightly higher across trials than females by `r round(tmp$estimate["mean in group M"] - tmp$estimate["mean in group F"],2)` points on average (i.e., `r round(tmp$estimate["mean in group M"],2)` for males vs  `r round(tmp$estimate["mean in group F"],2)` for females).
+*gender* makes a significant difference (*t*(`r round((tmp <- t.test(score ~ gender, data=d_wm_long))$parameter,1)`)=`r round(tmp$statistic,1)`, *p*=`r scinot(tmp$p.value)`; Mann-Whitney *W*=`r round((tmp1 <- wilcox.test(score ~ gender, data=d_wm_long))$statistic,1)`, *p*=`r scinot(tmp1$p.value)`), with males scoring slightly higher across trials than females by `r round(tmp$estimate["mean in group M"] - tmp$estimate["mean in group F"],2)` points on average (i.e., `r round(tmp$estimate["mean in group M"],2)` for males vs  `r round(tmp$estimate["mean in group F"],2)` for females).
 
 ```{r eval=FALSE, include=FALSE}
 # Are the trials within one type different?
@@ -921,6 +923,7 @@ kable(d %>% dplyr::mutate(show=paste0(ifelse(isword1=="yes","**",""),segments1,"
       col.names=c("Syllabe", "Segments", "Tone", "Tone letter", "Is real word?", "Short name"), 
       align=c("l", "l", "r", "r", "r", "r"),
       caption=capTab(paste0("The ",nrow(d)," stimuli used in the 'same' task, showing the segments and tone, orded alphabetically; some are actual words in the language (also maked using **bold**). Please note that the actual trials present pairs of such identical stimuli.")));
+d_same_items <- d;
 ```
 
 ```{r}
@@ -946,6 +949,11 @@ d_different_items <- d;
 s <- vapply(which(d_stims$judged_difficult == "yes"), function(i) which(d_different_items$syllable1 == d_stims$syllable1[i] & d_different_items$syllable2 == d_stims$syllable2[i]), numeric(1)); # the "difficult" stimuli
 ```
 Please note that stimuli `r paste0(d_different_items$segments1[s],"^",d_different_items$tone1[s],"^:",d_different_items$segments2[s],"^",d_different_items$tone2[s],"^ (",d_different_items$item_short1[s],")", collapse=", ")` are considered as "difficult" by the task designers in the sense that it is hard to hear the difference in tones even for these highly trained speakers of a tone language (Manxiang Wu, p.c.).
+
+```{r}
+# add the is_real_word info for printing/plotting:
+d_itmes_real_words <- union(d_same_items$item_short1[ d_same_items$isword1 == "yes" ], d_different_items$item_short1[ d_different_items$isword1 == "yes" | d_different_items$isword2 == "yes" ] );
+```
 
 
 ### Descriptives
@@ -1000,9 +1008,11 @@ d_tone_wide_items_order <- d_tone_wide_items_order[ order(d_tone_wide_items_orde
 ```
 
 ```{r}
-kable(d_tone_wide_items_order %>% dplyr::mutate(YESPercentage = sprintf("%.1f%%",YESPercentage*100)), 
-      row.names=FALSE, col.names=c("Item (short name)", "# correct reponses", "% correct reponses"), align=c("l", "r", "r"), 
-      caption=capTab("Frequencies of 'yes' responses (the items are ordered by % correct responses)."));
+kable(d_tone_wide_items_order %>% 
+        dplyr::mutate(YESPercentage = sprintf("%.1f%%",YESPercentage*100)) %>%
+        dplyr::mutate(Items = paste0(Items, ifelse(substring(Items, 1, nchar(Items)-1) %in% d_itmes_real_words, "*", ""))), 
+      row.names=FALSE, col.names=c("Item (short name)", "# correct responses", "% correct responses"), align=c("l", "r", "r"), 
+      caption=capTab("Frequencies of 'yes' responses (the items are ordered by % correct responses). The star (*) denotes those itmes that contain real words in the language."));
 ```
 
 ```{r, fig.width=8, fig.height=40, warning=FALSE, message=FALSE, echo=FALSE, fig.cap=capFig("Endorsement frequencies by item (items ordered by % correct responses).")}
@@ -1017,7 +1027,7 @@ barplot(d_tone_wide_items_order[,"YESCount"],
         xlab="Number of respondents", 
         cex.lab=0.8,
         cex.axis=0.5,
-        names.arg=d_tone_wide_items_order[, "Items"], 
+        names.arg=vapply(d_tone_wide_items_order[, "Items"], function(s) paste0(s, ifelse(substring(s, 1, nchar(s)-1) %in% d_itmes_real_words, "*", "")), character(1)), 
         las=2, 
         cex.names=0.8);
 # dev.off()
@@ -1076,7 +1086,7 @@ barplot(bluesqs_mean,
         xlab="Mean tetrachoric correlation", 
         cex.lab=0.8,
         cex.axis=0.5,
-        names.arg=names(bluesqs_mean), 
+        names.arg=vapply(names(bluesqs_mean), function(s) paste0(s, ifelse(substring(s, 1, nchar(s)-1) %in% d_itmes_real_words, "*", "")), character(1)), 
         las=2, 
         cex.names=0.8);
 ```
@@ -1089,8 +1099,10 @@ It can be seen that the following items seem "weird":
 d_all_items <- data.frame("Items"=names(bluesqs_mean), "mean_rho"=bluesqs_mean);
 d_all_items <- merge(d_all_items, d_tone_wide_items_order, all.x=TRUE, all.y=FALSE);
 d_special_items <- d_all_items[ d_all_items$mean_rho < 0, ];
-kable(d_special_items %>% dplyr::mutate(YESPercentage = sprintf("%.1f%%",YESPercentage*100), mean_rho=round(mean_rho,2)), 
-      row.names=FALSE, col.names=c("Item (short name)", "mean tetra. corr.", "# correct reponses", "% correct reponses"), align=c("l", "r", "r", "r"), 
+kable(d_special_items %>% 
+        dplyr::mutate(YESPercentage = sprintf("%.1f%%",YESPercentage*100), mean_rho=round(mean_rho,2)) %>%
+        dplyr::mutate(Items = paste0(Items, ifelse(substring(Items, 1, nchar(Items)-1) %in% d_itmes_real_words, "*", ""))), 
+      row.names=FALSE, col.names=c("Item (short name)", "mean tetra. corr.", "# correct responses", "% correct responses"), align=c("l", "r", "r", "r"), 
       caption=capTab("'Weird' items that have an average negative correlation with the other items."));
 ```
 
@@ -1135,7 +1147,7 @@ Moreover:
 Taken together, these suggest that the four classes of "different" stimuli listed above (i.e., the permutations of B^hx^, H^st^, I^st^, K^kl^ and L^lp^) tend to be massively misinterpreted by the participants (resulting in "incorrect" responses).
 However, we are missing here crucial items involving the H and K segments and other tone pairs, and the ^hx^, ^sx^ and ^lp^ pairs of tones involving other segments, to be able to speculate if this is related to the particular combination of segments and tone pairs, or to the segments and/or the tone pairs themselves.
 It remains an interesting question of why these "different" items, representing `r sprintf("%d or %.1f%%", length(tmp <- c("Bhx", "Bxh", "Hst", "Hts", "Ist", "Its", "Kkl", "Klk", "Llp", "Lpl")), length(tmp)/nrow(d_different_items)*100)`, behave differently from the other "different" and from virtually all the "same" items. 
-Apprently, these "incorrect" reponses persisted even when some of the participants were provided with explicit feedback by the experimenters (Manxiang Wu, p.c.) suggesting that these perceptions are "real" and not due to inattention or fatigue.
+Apparently, these "incorrect" responses persisted even when some of the participants were provided with explicit feedback by the experimenters (Manxiang Wu, p.c.) suggesting that these perceptions are "real" and not due to inattention or fatigue.
 Moreover, please note that I^st^ and H^st^ are specifically marked as "difficult" by the task creators, suggesting it is the tone pair ^st^ that is indeed hard to perceive as being different.
 
 ```{r}
@@ -1146,6 +1158,19 @@ weird_items <- c("Bhx1", "Bhx2", "Bxh1", "Bxh2",
                  "Kkl1", "Kkl2", "Klk1", "Klk2", 
                  "Llp1", "Llp2", "Lpl1", "Lpl2");
 ```
+
+It is important to note that there is no tendency for the weird items to contain real words in the language (the table below shows percentages of items that have the corresponding properties):
+
+```{r}
+# Are the real words enriched or impoverished among the weird items?
+d_all_items <- data.frame("item"=sort(union(d_same_items$item_short1, d_different_items$item_short1)), "is.word"=NA, "is.weird"=NA, "is.same"=NA);
+d_all_items$is.word <- (d_all_items$item %in% d_itmes_real_words);
+d_all_items$is.weird <- (d_all_items$item %in% substring(weird_items, 1, nchar(weird_items)-1));
+d_all_items$is.same <- (nchar(d_all_items$item) == 2);
+pander(round(100*prop.table(ftable(d_all_items[,c("is.same", "is.word", "is.weird")])),1));
+fisher.test(table(d_all_items[ !d_all_items$is.same, c("is.word", "is.weird" )])); # p=0.64
+```
+
 
 
 #### Does the repetition matter?
@@ -1255,7 +1280,7 @@ m0 <- glmmTMB(perc.cor.beta ~ presentation * same, data=d_presentation_summaries
 m1 <- update(m0, . ~ . - presentation:same); summary(m1); anova(m0, m1); DHARMa::testDispersion(m1, plot=FALSE); # interaction does not matter (and there's a bit of overdispersion)
 m2 <- update(m1, . ~ . - presentation); summary(m2); anova(m0, m2); DHARMa::testDispersion(m2, plot=FALSE); # presentation does not matter (and there's a bit of overdispersion)
 m3 <- update(m2, . ~ . - same); summary(m3); anova(m0, m3); DHARMa::testDispersion(m3, plot=FALSE); # same clearly matters (and there's a lot of overdispersion)
-# -> so the repretions does not seem to matter (but the same has better overall performance than different)
+# -> so the repetitions does not seem to matter (but the same has better overall performance than different)
 
 # Let's see if there is any difference between the items:
 d_presentation_summaries_long$item <- as.factor(d_presentation_summaries_long$item); contrasts(d_presentation_summaries_long$item) <- contr.sum(length(levels(d_presentation_summaries_long$item)));
@@ -1268,7 +1293,7 @@ m0d <- glmmTMB(perc.cor.beta ~ presentation, data=d_presentation_summaries_long[
 ```
 
 We fitted a beta regression model (using `glmmTMB`) of the *% correct responses* on the interaction between *presentation number* (between 1 and a maximum of `r max(d_presentation_summaries_long$presentation)`, varying by item) and the *item type* ("same" or "different").
-Manual model simplification shows that the interaction and the *presentation number* do not matter (`r sprintf("*χ*^2^(%d)=%.1f, *p*=%s, ΔAIC=%.1f", (a <- anova(m0, m2))[2,"Chi Df"], a[2,"Chisq"], scinot(a[2,"Pr(>Chisq)"]), a$AIC[1]-a$AIC[2])`), but *item type* does (`r sprintf("*χ*^2^(%d)=%.1f, *p*=%s, ΔAIC=%.1f", (a <- anova(m0, m3))[2,"Chi Df"], a[2,"Chisq"], scinot(a[2,"Pr(>Chisq)"]), a$AIC[1]-a$AIC[2])`), with the "same" itesm having an overall higher % of correct responses than the "different" items (`r sprintf("Δ%%correct = %.1f%%, *p*=%s", 100*(mean(d_presentation_summaries_long$perc.cor.beta[d_presentation_summaries_long$same]) - mean(d_presentation_summaries_long$perc.cor.beta[!d_presentation_summaries_long$same])), scinot(summary(m2)$coefficients$cond["sameTRUE","Pr(>|z|)"]))`).
+Manual model simplification shows that the interaction and the *presentation number* do not matter (`r sprintf("*χ*^2^(%d)=%.1f, *p*=%s, ΔAIC=%.1f", (a <- anova(m0, m2))[2,"Chi Df"], a[2,"Chisq"], scinot(a[2,"Pr(>Chisq)"]), a$AIC[1]-a$AIC[2])`), but *item type* does (`r sprintf("*χ*^2^(%d)=%.1f, *p*=%s, ΔAIC=%.1f", (a <- anova(m0, m3))[2,"Chi Df"], a[2,"Chisq"], scinot(a[2,"Pr(>Chisq)"]), a$AIC[1]-a$AIC[2])`), with the "same" items having an overall higher % of correct responses than the "different" items (`r sprintf("Δ%%correct = %.1f%%, *p*=%s", 100*(mean(d_presentation_summaries_long$perc.cor.beta[d_presentation_summaries_long$same]) - mean(d_presentation_summaries_long$perc.cor.beta[!d_presentation_summaries_long$same])), scinot(summary(m2)$coefficients$cond["sameTRUE","Pr(>|z|)"]))`).
 (There is some overdispersion in the model, `r sprintf("%.2f, *p*=%s", (s <- DHARMa::testDispersion(m2, plot=FALSE))$statistic, s$p.value)`, but probably not sufficient to qualitatively change these results.)
 The same lack of a significant effect for *presentation number* is shown separately for the 'same' items only (*p*=`r scinot(summary(m0s)$coefficients$cond["presentation","Pr(>|z|)"])`) and for the 'different' items only (*p*=`r scinot(summary(m0d)$coefficients$cond["presentation","Pr(>|z|)"])`).
 
@@ -1313,7 +1338,7 @@ hist(gPlus, main="Histogram of gPlus", xlab="gPlus (# of Guttman errors)");
 Q3 <- summary(gPlus)[[5]];
 IQR <- Q3 - summary(gPlus)[[2]];
 outlier <- gPlus > Q3 + 1.5 * IQR;
-# if needed to further analyse ouliers
+# if needed to further analyse outliers
 # cbind(mydata, gPlus)[outlier,]
 # then possible sensitivity analysis:
 # coefH(d_tone_wide[!outlier, -1])
@@ -1495,7 +1520,7 @@ d_tone_wide_items_order_flip <- d_tone_wide_items_order_flip[ order(d_tone_wide_
 
 ```{r}
 kable(d_tone_wide_items_order_flip %>% dplyr::mutate(YESPercentage = sprintf("%.1f%%",YESPercentage*100)), 
-      row.names=FALSE, col.names=c("Item (short name)", "# correct reponses", "% correct reponses"), align=c("l", "r", "r"), 
+      row.names=FALSE, col.names=c("Item (short name)", "# correct responses", "% correct responses"), align=c("l", "r", "r"), 
       caption=capTab("'Flipped' weird items: Frequencies of 'yes' responses (the items are ordered by % correct responses)."));
 ```
 
@@ -2379,7 +2404,7 @@ Here, there is a significant positive relationship between the two % correct mea
 This group roughly splits in two for **k=3**: **cluster 2(3)** that comprises `r sum(km3$cluster == as.numeric(labels_k3["1"]))` or `r round(100*sum(km3$cluster == as.numeric(labels_k3["1"]))/length(km2$cluster),1)`% the participants with relatively high % for the "non-weird" items (≥ `r round(min(d$pc_diff_remv[rownames(d) %in% names(km3$cluster)[km3$cluster == as.numeric(labels_k3["1"])]])*100,1)`%, mean = `r round(mean(d$pc_diff_remv[rownames(d) %in% names(km3$cluster)[km3$cluster == as.numeric(labels_k3["1"])]])*100,1)`% and median = `r round(median(d$pc_diff_remv[rownames(d) %in% names(km3$cluster)[km3$cluster == as.numeric(labels_k3["1"])]])*100,1)`%) and very low for the "weird" items (≤ `r round(max(d$pc_diff_weird[rownames(d) %in% names(km3$cluster)[km3$cluster == as.numeric(labels_k3["1"])]])*100,1)`%, mean = `r round(mean(d$pc_diff_weird[rownames(d) %in% names(km3$cluster)[km3$cluster == as.numeric(labels_k3["1"])]])*100,1)`% and median = `r round(median(d$pc_diff_weird[rownames(d) %in% names(km3$cluster)[km3$cluster == as.numeric(labels_k3["1"])]])*100,1)`%), basically those that clearly treated the "weird" items as being of the 'same' type.
 There is no relationship between the two % correct measures (`r sprintf("*β*=%.2f±%.2f, *p*=%s", (tmp <- summary(m_3_2)$coefficients)["pc_diff_remv", "Estimate"], tmp["pc_diff_remv", "Std. Error"], scinot(tmp["pc_diff_remv", "Pr(>|t|)"]))`).
 The other part forms **cluster 3(3)** that comprises `r sum(km3$cluster == as.numeric(labels_k3["3"]))` or `r round(100*sum(km3$cluster == as.numeric(labels_k3["3"]))/length(km2$cluster),1)`% the participants with high % for the "non-weird" items (≥ `r round(min(d$pc_diff_remv[rownames(d) %in% names(km3$cluster)[km3$cluster == as.numeric(labels_k3["3"])]])*100,1)`%, mean = `r round(mean(d$pc_diff_remv[rownames(d) %in% names(km3$cluster)[km3$cluster == as.numeric(labels_k3["3"])]])*100,1)`% and median = `r round(median(d$pc_diff_remv[rownames(d) %in% names(km3$cluster)[km3$cluster == as.numeric(labels_k3["3"])]])*100,1)`%) and low for the "weird" items (≤ `r round(max(d$pc_diff_weird[rownames(d) %in% names(km3$cluster)[km3$cluster == as.numeric(labels_k3["3"])]])*100,1)`%, mean = `r round(mean(d$pc_diff_weird[rownames(d) %in% names(km3$cluster)[km3$cluster == as.numeric(labels_k3["3"])]])*100,1)`% and median = `r round(median(d$pc_diff_weird[rownames(d) %in% names(km3$cluster)[km3$cluster == as.numeric(labels_k3["3"])]])*100,1)`%).
-However, here there is no relationship between the two % correct measures, with a signifciant positive prediction of % correct of the "weird" items from the  "non-weird" ones (`r sprintf("*β*=%.2f±%.2f, *p*=%s", (tmp <- summary(m_3_3)$coefficients)["pc_diff_remv", "Estimate"], tmp["pc_diff_remv", "Std. Error"], scinot(tmp["pc_diff_remv", "Pr(>|t|)"]))`).
+However, here there is no relationship between the two % correct measures, with a significant positive prediction of % correct of the "weird" items from the  "non-weird" ones (`r sprintf("*β*=%.2f±%.2f, *p*=%s", (tmp <- summary(m_3_3)$coefficients)["pc_diff_remv", "Estimate"], tmp["pc_diff_remv", "Std. Error"], scinot(tmp["pc_diff_remv", "Pr(>|t|)"]))`).
 
 Importantly, the % correct for the "weird" items (which are nominally 'different') have very strong and highly significant *negative* correlations with the % correct for the 'same' "non-weird" items, and their linear regressions have negative and slopes *β* of comparable size (-0.90 ≤ *β*s ≤ -0.50) on the whole dataset and in each cluster separately:
 
@@ -2990,6 +3015,40 @@ if( FORCE_COMPUTE_ALL ||
 }
 ```
 
+```{r include=FALSE, results='hide'}
+# Figure for the paper:
+# unfortunately, because we have a Poisson model for education_years, we can't get standardized coefficients for it
+# so, let's do a chimera: we report the standardized coefficients for all the other paths, but unstandardized for education_years...
+g <- plot(tone_pcr_results$path_model$linearreg$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_pcr_results$path_model$linearreg$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- ifelse(g_edges$estim.std != "-", as.numeric(g_edges$estim.std), as.numeric(g_edges$estim.nstd));
+g_edges$label <- sprintf("%s%.1g%s%s",
+                         ifelse(g_edges$estim.std == "-", "[", ""),
+                         g_edges$estim, 
+                         ifelse(g_edges$estim.std == "-", "]", ""),
+                         ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "age",   "gender",  "wm",    "pcr",         "loc"));
+g <- set_node_attrs(g, "fillcolor", c("white", "white", "white",   "white", "lightyellow", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black", "gray60",  "black", "black",       "black"));
+g <- set_node_attrs(g, "color",     c("black", "black", "gray60",  "black", "black",       "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/path_model.pdf", file_type="pdf");
+DiagrammeR::export_graph(g, file_name="./paper/figures/path_model.png", file_type="png", width=10*72, height=10*72); # assuming 72 DPI
+```
+
 We focus here on the *% total correct responses on the 'recoded' dataset* estimate (*pcr* = *p*ercent *c*orrect *r*ecoded).
 Given that these are percents bounded, by definition, between 0% and 100%, we used beta regression (as implemented by `glmmTMB::glmmTMB()`); however, the mediation modelling function `mediation::mediate` has troubles with beta regression, as has `piecewiseSEM::psem()` when it comes to fitting the full mediation model, so we employed in these cases the equivalent linear regressions (the relevant coefficient estimates and p-values are similar enough between the two to ensure that the qualitative conclusions hold).
 Moreover, `piecewiseSEM` has troubles estimating the standardized path coefficients, so we report here the *un*standardized ones.
@@ -3050,7 +3109,7 @@ Moreover, the effect of *age* is split between the direct positive effect and th
 
 #### Mediation: location → education → tone
 
-Likewise, fitting a mediation model where *location* influences *tone* through *years of education* finds significant negative (i.e., that Xinming has worse performance than A) direct (ADE) and mediated (ACME) effects; as fitted using `mediation::mediate()` (with linear regression):
+Likewise, fitting a mediation model where *location* influences *tone* through *years of education* finds significant negative (i.e., that B has worse performance than A) direct (ADE) and mediated (ACME) effects; as fitted using `mediation::mediate()` (with linear regression):
 ```{r}
 tone_pcr_results$med_location__education$mediation;
 ```
@@ -3304,7 +3363,7 @@ Moreover, the effect of *age* is split between the direct positive effect and th
 
 #### Mediation: location → education → tone
 
-Likewise, fitting a mediation model where *location* influences *tone* through *years of education* finds significant negative (i.e., that Xinming has worse performance than A) direct (ADE) and mediated (ACME) effects; as fitted using `mediation::mediate()` (with linear regression):
+Likewise, fitting a mediation model where *location* influences *tone* through *years of education* finds significant negative (i.e., that B has worse performance than A) direct (ADE) and mediated (ACME) effects; as fitted using `mediation::mediate()` (with linear regression):
 ```{r}
 tone_dpr_results$med_location__education$mediation;
 ```
@@ -3372,7 +3431,7 @@ if( FORCE_COMPUTE_ALL ||
   # and also a beta regression but with family as fixed effect:
   m_pco__fam <- glmmTMB(pco ~ family, family=beta_family(), control=beta_ctrl, data=d_all[ !is.na(d_all$family), ]); summary(m_pco__fam); DHARMa::testDispersion(m_pco__fam, plot=FALSE);
   (anova_pco__fam <- anova(m_pco__fam, update(m_pco__fam, . ~ . -family, data=d_all[ !is.na(d_all$family), ]))); # p=0.2951
-  # -> no efect really
+  # -> no effect really
   
   # ... but does the generation matter?
   m_pco__gen <- glmmTMB(pco ~ generation, family=beta_family(), control=beta_ctrl, data=d_all); summary(m_pco__gen); # beta=0.069, p=0.62
@@ -3396,7 +3455,7 @@ if( FORCE_COMPUTE_ALL ||
                     gender:location_ab:wm_norm - age:location_ab:wm_norm - education_years:location_mxn:wm_norm - education_years:location_ab:wm_norm - age:gender:location_ab - age:gender:wm_norm - 
                     gender:education_years:location_ab - gender:education_years:wm_norm - age:gender:education_years - age:education_years:wm_norm - age:education_years:location_ab # 3-way interactions
   ); summary(m_pco); (anova_m_pco = anova(m_pco, m_pco_full));
-  # let's swtich the baseline model to this one (i.a, test the 2-way interactions):
+  # let's switch the baseline model to this one (i.a, test the 2-way interactions):
   m_pco_full <- m_pco;
   m_pco <- update(m_pco_full, . ~ . - 
                     location_ab:wm_norm - gender:wm_norm - age:wm_norm - gender:location_ab - age:gender - age:location_ab - age:education_years - education_years:location_ab # 2-way interactions
@@ -4034,6 +4093,100 @@ Including all the potential predictors (and their interactions) in a multiple li
 ```{r}
 summary(tone_cbo_results$multreg);
 ```
+
+
+### Comparing the "original", "recoded" and "removed" results
+
+Here we compare side-by-side the complex path models (with linear instead of Beta regressions and showing the unstandardized coefficients) for the *original* ("o"), *recoded* ("r") and *removed* ("x") datasets.
+
+#### % correct responses
+
+```{r results='hide'}
+if( FORCE_COMPUTE_ALL || 
+    !file.exists("./cached_results/tone_pcx_results.rds") ) # computationally expensive
+{
+  ## Prepare for beta regression:
+  d_all$pcx <- prepare_for_beta_regression(d_all$pc_tot_remv);
+  
+  # Keep only the relevant non-missing data:
+  d <- na.omit(d_all[,c("pcx", "age", "gender", "gender_n", "education_years", "location_ab", "location_bin", "wm_norm")]);
+  
+  ## Just the complex path model using linear regression:
+  psem_pcx_path <- piecewiseSEM::psem(
+    glm(education_years ~ age + gender_n + location_bin, family=poisson(), data=d), # age + gender -> education
+    lm(age ~ location_bin + gender_n, data=d), # location + gender -> age
+    glm(gender_n ~ location_bin, family=binomial(), data=d), # location -> gender
+    lm(wm_norm ~ education_years + gender_n + age, data=d), # age + gender + education -> wm
+    lm(pcx ~ wm_norm + age + gender_n + education_years + location_bin, data=d), # all -> pcr
+    data=d);
+  (summary_psem_pcx_path <- summary(psem_pcx_path, .progressBar = FALSE));
+  plot(psem_pcx_path, show="unstd"); # standardized not available
+  
+  
+  # save them to file:
+  tone_pcx_results <- list("path_model"=list("linearreg"=list("model"=psem_pcx_path, "summary"=summary_psem_pcx_path)),
+                           "data"=d);
+  saveRDS(tone_pcx_results, file=xzfile("./cached_results/tone_pcx_results.rds", compression=9));
+} else
+{
+  tone_pcx_results <- readRDS(xzfile("./cached_results/tone_pcx_results.rds"));
+}
+```
+
+```{r fig.width=5, fig.height=5, fig.cap=capFig("The complex path model for *pco*.")}
+plot(tone_pco_results$path_model$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6),digits=3);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("The complex path model for *pcr*.")}
+plot(tone_pcr_results$path_model$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6),digits=3);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("The complex path model for *pcx*.")}
+plot(tone_pcx_results$path_model$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6),digits=3);
+```
+
+#### d'
+
+```{r results='hide'}
+if( FORCE_COMPUTE_ALL || 
+    !file.exists("./cached_results/tone_dpx_results.rds") ) # computationally expensive
+{
+  ## Prepare for beta regression:
+  d_all$dpx <- prepare_for_beta_regression(d_all$dprime_remv);
+  
+  # Keep only the relevant non-missing data:
+  d <- na.omit(d_all[,c("dpx", "age", "gender", "gender_n", "education_years", "location_ab", "location_bin", "wm_norm")]);
+  
+  ## Just the complex path model using linear regression:
+  psem_dpx_path <- piecewiseSEM::psem(
+    glm(education_years ~ age + gender_n + location_bin, family=poisson(), data=d), # age + gender -> education
+    lm(age ~ location_bin + gender_n, data=d), # location + gender -> age
+    glm(gender_n ~ location_bin, family=binomial(), data=d), # location -> gender
+    lm(wm_norm ~ education_years + gender_n + age, data=d), # age + gender + education -> wm
+    lm(dpx ~ wm_norm + age + gender_n + education_years + location_bin, data=d), # all -> pcr
+    data=d);
+  (summary_psem_dpx_path <- summary(psem_dpx_path, .progressBar = FALSE));
+  plot(psem_dpx_path, show="unstd"); # standardized not available
+  
+  
+  # save them to file:
+  tone_dpx_results <- list("path_model"=list("model"=psem_dpx_path, "summary"=summary_psem_dpx_path),
+                           "data"=d);
+  saveRDS(tone_dpx_results, file=xzfile("./cached_results/tone_dpx_results.rds", compression=9));
+} else
+{
+  tone_dpx_results <- readRDS(xzfile("./cached_results/tone_dpx_results.rds"));
+}
+```
+
+```{r fig.width=5, fig.height=5, fig.cap=capFig("The complex path model for *dpo*.")}
+plot(tone_dpo_results$path_model$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6),digits=3);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("The complex path model for *dpr*.")}
+plot(tone_dpr_results$path_model$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6),digits=3);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("The complex path model for *dpx*.")}
+plot(tone_dpx_results$path_model$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6),digits=3);
+```
+
 
 
 
