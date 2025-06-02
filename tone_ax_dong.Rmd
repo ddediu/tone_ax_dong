@@ -1,6 +1,6 @@
 ---
-title: "Using psychometrics and Signal Detection Theory to investigate tone perception in 490 native speakers of *Kam* (*Dong*)"
-subtitle: "Supplementary Materials (full analysis report)"
+title: "Psychometric methods and Signal Detection Theory uncover subtle differences in the perception of tone contrasts in speakers of *Kam* (*Dong*)"
+subtitle: "Analysis report"
 author: Dan Dediu [ddediu@gmail.com], Luchang Wang, Patrick C. M. Wong, Manxiang Wu
 date: "`r date()`"
 output:
@@ -237,7 +237,7 @@ alpha_level <- 0.05;
 if( !dir.exists("./figures") ) dir.create("./figures", showWarnings=FALSE); # figures are saved here
 if( !dir.exists("./cached_results") ) dir.create("./cached_results", showWarnings=FALSE); # cache expensive results here
 
-supp_mats <- TRUE; # supplementary materials, so figure and table numbering starts with S
+supp_mats <- FALSE; # to avoid conflicts with the actual supplementary information, we use a simple numbering system here
 
 ## Auxiliary functions:
 
@@ -387,58 +387,61 @@ colorize_text <- function(x, color) {
 
 **Links to the main figures and tables referenced in the main paper:**
 
+Please note that the figure and table numbers used here do not match those used in the paper or its accompanying Supplementary Information.
+
 - *Figures:*
-  + [Figure S1. Distribution of gender.](#FigS1)
-  + [Figure S2. Distribution of age.](#FigS2)
-  + [Figure S4. Distribution of years of musical traning.](#FigS4)
-  + [Figures S5-S6. Distribution of years of education by gender and by location.](#FigS5)
-  + [Figure S7. Predictive plot of the linear regression of education on gender, age and their interaction.](#FigS7)
-  + [Figures S9-S11. PCA of working memory.](#FigS9)
-  + [Figures S12-S14. EFA of working memory.](#FigS12)
-  + [Figure S15. CFA of working memory.](#FigS15)
-  + [Figure S16. Normalized working memory by gender and age.](#FigS16)
-  + [Figure S17. Number of correct responses on the tone task (original dataset).](#FigS17)
-  + [Figures S18-S21. Correlation matrix, its histogram, hierarchical clustering, and average correlations for the tone task (original dataset).](#FigS18)
-  + [Figure S24. Guttman errors for the tone task (original dataset).](#FigS24)
-  + [Figures S25-S27. PCA of the tone task (original dataset).](#FigS25)
-  + [Figures S28-S30. EFA of the tone task (original dataset).](#FigS28)
-  + [Figures S31-S35. Correlation matrix, its histogram, hierarchical clustering, and average correlations for the tone task (recoded dataset).](#FigS31)
-  + [Figures S36-S38. PCA of the tone task (recoded dataset).](#FigS36)
-  + [Figures S39-S41. EFA of the tone task (recoded dataset).](#FigS39)
-  + [Figures S42-S43. Histograms and correlations heatmaps (with clustering) for pcr on the three datasets.](#FigS42)
-  + [Figures S46-S47. Histograms and correlations heatmaps (with clustering) for SDT-deroved measures on the three datasets.](#FigS46)
-  + [Figure S55. K-means clustering for the tone task (original dataset).](#FigS55)
-  + [Figure S56. % different vs % same for the tone task clusters.](#FigS56)
-  + [Figures S57-S58. Correlations heatmaps (with clustering) for all measures of interest.](#FigS57)
-  + [Figure S60. Mediation gender → education → working memory.](#FigS60)
-  + [Figure S61. Mediation age → education → working memory.](#FigS61)
-  + [Figures S62-S64. Multiple regression of pcr (recoded dataset).](#FigS62)
-  + [Figure S65. Mediation gender → education → tone (recoded dataset).](#FigS65)
-  + [Figure S66. Mediation age → education → tone (recoded dataset).](#FigS66)
-  + [Figure S67. Mediation location → education → tone (recoded dataset).](#FigS67)
-  + [Figure S68. Mediation education, age, gender → working memory → tone (recoded dataset).](#FigS68)
-  + [Figures S70-S77. Corresponding analyses for d' (recoded dataset).](#FigS70)
-  + [Figures S94-S99. Comparing the complex path models for % correct responses and d' on the original, recoded and removed datasets.](#FigS94)
+  + [Figure 1. Distribution of gender.](#Fig1)
+  + [Figure 2. Distribution of age.](#Fig2)
+  + [Figure 4. Distribution of years of musical traning.](#Fig4)
+  + [Figures 5-6. Distribution of years of education by gender and by location.](#Fig5)
+  + [Figure 7. Predictive plot of the linear regression of education on gender, age and their interaction.](#Fig7)
+  + [Figures 9-11. PCA of working memory.](#Fig9)
+  + [Figures 12-14. EFA of working memory.](#Fig12)
+  + [Figure 15. CFA of working memory.](#Fig15)
+  + [Figure 16. Normalized working memory by gender and age.](#Fig16)
+  + [Figure 17. Number of correct responses on the tone task (original dataset).](#Fig17)
+  + [Figures 18-21. Correlation matrix, its histogram, hierarchical clustering, and average correlations for the tone task (original dataset).](#Fig18)
+  + [Figure 24. Guttman errors for the tone task (original dataset).](#Fig24)
+  + [Figures 25-27. PCA of the tone task (original dataset).](#Fig25)
+  + [Figures 28-30. EFA of the tone task (original dataset).](#Fig28)
+  + [Figures 31-35. Correlation matrix, its histogram, hierarchical clustering, and average correlations for the tone task (recoded dataset).](#Fig31)
+  + [Figures 36-38. PCA of the tone task (recoded dataset).](#Fig36)
+  + [Figures 39-41. EFA of the tone task (recoded dataset).](#Fig39)
+  + [Figures 42-43. Histograms and correlations heatmaps (with clustering) for pcr on the three datasets.](#Fig42)
+  + [Figures 46-47. Histograms and correlations heatmaps (with clustering) for SDT-deroved measures on the three datasets.](#Fig46)
+  + [Figure 55. K-means clustering for the tone task (original dataset).](#Fig55)
+  + [Figure 56. % different vs % same for the tone task clusters.](#Fig56)
+  + [Figures 57-58. Correlations heatmaps (with clustering) for all measures of interest.](#Fig57)
+  + [Figure 60. Mediation gender → education → working memory.](#Fig60)
+  + [Figure 61. Mediation age → education → working memory.](#Fig61)
+  + [Figures 62-64. Multiple regression of pcr (recoded dataset).](#Fig62)
+  + [Figure 65. Mediation gender → education → tone (recoded dataset).](#Fig65)
+  + [Figure 66. Mediation age → education → tone (recoded dataset).](#Fig66)
+  + [Figure 67. Mediation location → education → tone (recoded dataset).](#Fig67)
+  + [Figure 68. Mediation education, age, gender → working memory → tone (recoded dataset).](#Fig68)
+  + [Figures 70-77. Corresponding analyses for d' (recoded dataset).](#Fig70)
+  + [Figures 94-99. Comparing the complex path models for % correct responses and d' on the original, recoded and removed datasets.](#Fig94)
 
 - *Tables:*
-  + [Table S1. The working memory trials.](#TabS1)
-  + [Tables S5-S6. Tone task stimuli.](#TabS5)
-  + [Table S7. Frequencies of correct responses on the tone task (original dataset).](#TabS7)
-  + [Tables S9-S10. Item homogeneities for the tone task (original dataset).](#TabS9)
-  + [Table S11. aisp for the tone task (original dataset).](#TabS11)
-  + [Table S12. Frequencies of correct responses on the tone task (recoded dataset).](#TabS12)
-  + [Tables S13-S14. Item homogeneities for the tone task (recoded dataset).](#TabS13)
-  + [Table S15. aisp for the tone task (recoded dataset).](#TabS15)
-  + [Tables S16-S17. Item homogeneities for the tone task (reduced dataset).](#TabS16)
-  + [Table S19. aisp for the tone task (reduced dataset).](#TabS19)
-  + [Table S24. W and non-W item correlations.](#TabS24)
-  + [Table S26. Comparisons between measures and datasets.](#TabS26)
-  + [Table S27. Examples of response patterns detectable by SDT but not by % correct responses.](#TabS27)
+  + [Table 1. The working memory trials.](#Tab1)
+  + [Tables 5-6. Tone task stimuli.](#Tab5)
+  + [Table 7. Frequencies of correct responses on the tone task (original dataset).](#Tab7)
+  + [Tables 9-10. Item homogeneities for the tone task (original dataset).](#Tab9)
+  + [Table 11. aisp for the tone task (original dataset).](#Tab11)
+  + [Table 12. Frequencies of correct responses on the tone task (recoded dataset).](#Tab12)
+  + [Tables 13-14. Item homogeneities for the tone task (recoded dataset).](#Tab13)
+  + [Table 15. aisp for the tone task (recoded dataset).](#Tab15)
+  + [Tables 16-17. Item homogeneities for the tone task (reduced dataset).](#Tab16)
+  + [Table 19. aisp for the tone task (reduced dataset).](#Tab19)
+  + [Table 24. W and non-W item correlations.](#Tab24)
+  + [Table 26. Comparisons between measures and datasets.](#Tab26)
+  + [Table 27. Examples of response patterns detectable by SDT but not by % correct responses.](#Tab27)
 
 
 # Introduction
 
-This document (irrespective of its format, most probably `HTML` or `PDF`) resulted from compiling the corresponding `Rmarkdown` script and contains all the results and plots supporting the paper (its **Supplementary Materials**).
+This document (irrespective of its format, most probably `HTML` or `PDF`) resulted from compiling the corresponding `Rmarkdown` script and contains all the results and plots supporting the paper (referred to as the **Analysis reports** in the main paper).
+This `Rmarkdown` script also generates the (panels) of the supplementary figures and the content of the supplementary tables contained in the paper's **Supplementary Information**.
 The primary data are available upon request from the corresponding author (Manxiang Wu <manxiangwu1022@163.com>), as instructed in the paper, but all the code needed to reproduce this document are available in the *GitHub* repository [https://github.com/ddediu/tone_ax_dong](https://github.com/ddediu/tone_ax_dong).
 
 Please note that this `Rmarkdown` script caches some very expensive computations in the `./cached_results` directory, but it can be manually forced to recompute everything (setting the variable `FORCE_COMPUTE_ALL` to `TRUE`) and it also forces a full recomputation if any of the input files (in the directory `./input_files`) was changed, deleted or added (or if this is the first time this is run).
@@ -664,6 +667,53 @@ sjPlot::plot_model(m_educ, type="pred", terms=c("age [all]", "gender"));
 ```
 
 
+```{r}
+# combine the covariates plots into a single figure for the paper:
+p1 <- ggplot(d_ppts, aes(x=gender, fill=gender, color=gender)) + geom_bar(alpha=0.25) + 
+  scale_fill_manual(values=c("F"="red", "M"="blue")) + scale_color_manual(values=c("F"="red", "M"="blue")) + 
+  ggtitle("A"); 
+p2 <- ggplot(d_ppts, aes(x=age, fill=gender, color=gender)) + geom_density(alpha=0.25) + geom_density(data=d_ppts, aes(x=age), alpha=0.5, color="black", fill=NA, linewidth=1.0) + 
+  scale_fill_manual(values=c("F"="red", "M"="blue")) + scale_color_manual(values=c("F"="red", "M"="blue")) + 
+  ggtitle("B");
+p3 <- ggplot(d_all, aes(x=music_years, fill=gender, color=gender)) + 
+  geom_histogram(alpha=0.25) + 
+  scale_fill_manual(values=c("F"="red", "M"="blue")) + scale_color_manual(values=c("F"="red", "M"="blue")) + 
+  ggtitle("C") + xlab("years of formal muscial training") +
+  NULL;
+p4 <- ggplot(d_all, aes(x=education_years, fill=gender, color=gender)) + 
+  geom_histogram(alpha=0.25) + 
+  scale_fill_manual(values=c("F"="red", "M"="blue")) + scale_color_manual(values=c("F"="red", "M"="blue")) + 
+  ggtitle("D") + xlab("years of formal education") + 
+  NULL;
+
+tiff("./paper/figures/Fig2.tiff", units="in", width=2*3, height=2*3, res=600, compression="lzw", type="cairo");
+grid.arrange(p1, p2, p3, p4, ncol=2);
+dev.off();
+             
+cairo_ps("./paper/figures/Fig2.eps", width=2*3, height=2*3, onefile=TRUE, fallback_resolution=600);
+grid.arrange(p1, p2, p3, p4, ncol=2);
+dev.off();
+             
+jpeg("./paper/figures/Fig2.jpg", units="in", width=2*3, height=2*3, quality=85, res=300);
+grid.arrange(p1, p2, p3, p4, ncol=2);
+dev.off();
+
+# regression:
+tiff("./paper/figures/FigS1.tiff", units="in", width=1*5+0.25, height=1*5, res=600, compression="lzw", type="cairo");
+sjPlot::plot_model(m_educ, type="pred", terms=c("age [all]", "gender")) + ylab("years of formal education") + ggtitle(NULL);
+dev.off();
+
+#cairo_ps("./paper/figures/FigS1.eps", width=1*5+0.25, height=1*5, onefile=TRUE, fallback_resolution=600);
+#sjPlot::plot_model(m_educ, type="pred", terms=c("age [all]", "gender")) + ylab("years of formal education") + ggtitle(NULL);
+#dev.off();
+
+jpeg("./paper/figures/FigS1.jpg", units="in", width=1*5+0.25, height=1*5,  quality=85, res=300);
+sjPlot::plot_model(m_educ, type="pred", terms=c("age [all]", "gender")) + ylab("years of formal education") + ggtitle(NULL);
+dev.off();
+```
+
+
+
 ## The measures
 
 ### The working memory task
@@ -772,6 +822,16 @@ fviz_pca_ind(wm_pca,
              );
 ```
 
+```{r}
+# for paper:
+p1 <- fviz_eig(wm_pca) + ylab("% explained variance") + xlab(expression("PC"[i])) + ggtitle("A");
+
+tiff("./paper/figures/FigS3A.tiff", units="in", width=1*5, height=1*5, res=600, compression="lzw", type="cairo");
+p1;
+dev.off();
+```
+
+
 For **EFA**, all the preliminary tests suggest that factor analysis is appropriate (`r sprintf("Kaiser-Meyer-Olkin = %.2f > 0.60; Bartlett's test is significant: *χ*^2^(%d)=%.1f, *p*=%.3g; and det(cor(data))=%.2g > 0", KMO(r=cor(d))$MSA, (tmp <- cortest.bartlett(d))$df, tmp$chisq, tmp$p.value, det(cor(d)))`) and all the recommended methods for finding the appropriate number of factors suggest that 1 factor is enough:
 
 ```{r fig.width=4, fig.height=4, fig.cap=capFig("Screeplot of the observed, simulated and randomized data with 1 standard deviation error bars (as generated by `fa.parallel())`."), results='hide'}
@@ -784,6 +844,13 @@ nfactors(d);
 Even if this 1-factor model does not seem to formally be sufficient to explain all of the variance in the data (about 35.8% of the variance explained, but `r sprintf("*χ*^2^(%d)=%.1f, *p*=%.2g < 0.05", wm_fa_1f$dof, wm_fa_1f$STATISTIC, wm_fa_1f$PVAL)`), the loadings are very similar: 
 ```{r fig.width=6, fig.height=8, fig.cap=capFig("Loadings of the variables in the 1 factor model."), results='hide'}
 fa.diagram(wm_fa_1f$loadings);
+```
+
+```{r}
+# for paper:
+tiff("./paper/figures/FigS3B.tiff", units="in", width=1*5, height=1*5, res=600, compression="lzw", type="cairo");
+fa.parallel(d, fa="fa", n.iter=100, error.bars=TRUE, main="B");
+dev.off();
 ```
 
 ```{r include=FALSE}
@@ -801,6 +868,14 @@ modindices(wm_cfa_1f_fit, sort=TRUE);
 We also implemented a **Confirmatory Factor Analysis (CFA)** with all trails loading on a single latent *wm* variable, and we found that while the model formally does not fit the data (`r sprintf("*χ*^2^(%0.f)=%.1f, *p*=%.2g ≤ 0.05", (s <- fitMeasures(wm_cfa_1f_fit, c("chisq", "df", "pvalue")))["chisq"], s["df"], s["pvalue"])`), its fit indices are ok (`r sprintf("CFI=%.2f, TLI=%.2f, RFI=%.2f, RMSEA=%.2f", (s <- fitMeasures(wm_cfa_1f_fit, c("cfi", "tli", "rfi", "rmsea")))["cfi"], s["tli"], s["rfi"], s["rmsea"])`) and the path coefficients suggest that all trials load in similar ways on the *wm* latent:
 ```{r fig.width=10, fig.height=3, fig.cap=capFig("Confirnatory factor analysis (CFA) of the working memory trislas with a single latent factor *wm*.")}
 lavaanPlot(model=wm_cfa_1f_fit, coefs=TRUE, sig=1.00, stand=TRUE, covs=TRUE, stars=c("regress", "latent", "covs"), edge_options=list(color="gray"));
+```
+
+```{r}
+# for paper:
+#tiff("./paper/figures/FigS3C.tiff", units="in", width=1*5, height=1*5, res=600, compression="lzw", type="cairo");
+p1 <- lavaanPlot(model=wm_cfa_1f_fit, coefs=TRUE, sig=1.00, stand=TRUE, covs=TRUE, stars=c("regress", "latent", "covs"), edge_options=list(color="gray"));
+tmp <- embed_plot_pdf(p1, "./paper/figures/FigS3C.pdf");
+#dev.off();
 ```
 
 **Given all these**, it makes sense to compute a *total score* from all the trials (i.e., using the same weight of 1.0); we further normalized it between its minimum possible score of 0.0 and its maximum of 3 &times; (3+4+5+6+7) = 75 (this variable will be denoted as *wm_norm*).
@@ -843,12 +918,26 @@ We performed the linear regression of *wm_norm* on *age*, the number of years of
 
 ```{r include=FALSE, echo=FALSE}
 # For paper:
-ggplot(d_all, aes(x=wm_norm, fill=gender, color=gender)) + 
-  geom_density(alpha=0.25) + geom_density(data=d_all, aes(x=wm_norm), alpha=0.5, color="black", fill=NA, linewidth=1.0) + 
-  scale_fill_manual(values=c("F"="red", "M"="blue")) + scale_color_manual(values=c("F"="red", "M"="blue")) + xlim(c(0,1)) + xlab("Normalized working memory total score") +
-  NULL;
-ggsave("./paper/figures/distr_wm_norm.tiff", device="tiff", units="in", width=5, height=5, dpi=300, compression="lzw");
-ggsave("./paper/figures/distr_wm_norm.jpg",  device="jpeg", units="in", width=5, height=5, quality=85);
+p1 <- ggplot(d_all, aes(x=wm_norm, fill=gender, color=gender)) + 
+               geom_density(alpha=0.25) + geom_density(data=d_all, aes(x=wm_norm), alpha=0.5, color="black", fill=NA, linewidth=1.0) + xlab("normalized working memory total score") + 
+               scale_fill_manual(values=c("F"="red", "M"="blue")) + scale_color_manual(values=c("F"="red", "M"="blue")) + xlim(c(0,1)) + ggtitle("A") + 
+               NULL;
+p2 <- ggplot(d_all, aes(x=age, y=wm_norm, color=gender)) + 
+               geom_point(alpha=0.5) + geom_smooth(method="lm") + 
+               scale_color_manual(values=c("F"="red", "M"="blue")) + ylim(c(0,1)) + ylab("normalized working memory total score") + xlab("age") + ggtitle("B") + 
+               NULL;
+p3 <- ggplot(d_all, aes(x=education_years, y=wm_norm, color=gender)) + 
+               geom_point(alpha=0.5) + geom_smooth(method="lm") + 
+               scale_color_manual(values=c("F"="red", "M"="blue")) + ylim(c(0,1)) + xlab("years of formal education") + ylab("normalized working memory total score") + ggtitle("C") + 
+               NULL;
+
+tiff("./paper/figures/FigS4.tiff", units="in", width=3*5.25, height=1*5, res=600, compression="lzw", type="cairo");
+grid.arrange(p1, p2, p3, ncol=3);
+dev.off();
+
+jpeg("./paper/figures/FigS4.jpg", units="in", width=3*5.25, height=1*5, ,  quality=85, res=300);
+grid.arrange(p1, p2, p3, ncol=3);
+dev.off();
 ```
 
 
@@ -1091,6 +1180,69 @@ barplot(bluesqs_mean,
         cex.names=0.8);
 ```
 
+
+```{r results='hide'}
+# for the paper:
+# barplot of endorsement frequencies (number of respondents with affirmative answers)
+#tiff("./paper/figures/FigS5.tif", width=2*4, height=1*12, units="in", res=600, compression="lzw");
+cairo_ps("./paper/figures/FigS5.eps", width=3*4, height=1*12, onefile=TRUE);
+par(mfrow=c(1,3), oma=c(0,3,0,0), mar=c(3,2,1,1))
+barplot(d_tone_wide_items_order[,"YESCount"], 
+        horiz = TRUE,
+        main = "A",
+        ylab="", 
+        xlab="Number of respondents", 
+        cex.lab=0.8,
+        cex.axis=0.5,
+        names.arg=vapply(d_tone_wide_items_order[, "Items"], function(s) paste0(s, ifelse(substring(s, 1, nchar(s)-1) %in% d_itmes_real_words, "*", "")), character(1)), 
+        las=2, 
+        cex.names=0.5);
+bluesqs_mean_for_plotting <- bluesqs_mean[ d_tone_wide_items_order[, "Items"] ];
+barplot(bluesqs_mean_for_plotting, 
+        horiz = TRUE,
+        col = ifelse(bluesqs_mean_for_plotting < 0, "blue", "red"),
+        main = "B",
+        ylab="", 
+        xlab="Mean tetrachoric correlation", 
+        cex.lab=0.8,
+        cex.axis=0.5,
+        #names.arg=vapply(names(bluesqs_mean_for_plotting), function(s) paste0(s, ifelse(substring(s, 1, nchar(s)-1) %in% d_itmes_real_words, "*", "")), character(1)), 
+        names.arg=rep("",length(bluesqs_mean_for_plotting)),
+        las=2, 
+        cex.names=0.8);
+par(cex=0.4, cex.main=2); plot(as.dendrogram(items_clust), horiz=TRUE, main="C"); par(cex=1.0); 
+dev.off();
+
+jpeg("./paper/figures/FigS5.jpg", width=3*4, height=1*12, units="in", quality=85, res=300);
+par(mfrow=c(1,3), oma=c(0,3,0,0), mar=c(3,2,1,1))
+barplot(d_tone_wide_items_order[,"YESCount"], 
+        horiz = TRUE,
+        main = "A",
+        ylab="", 
+        xlab="Number of respondents", 
+        cex.lab=0.8,
+        cex.axis=0.5,
+        names.arg=vapply(d_tone_wide_items_order[, "Items"], function(s) paste0(s, ifelse(substring(s, 1, nchar(s)-1) %in% d_itmes_real_words, "*", "")), character(1)), 
+        las=2, 
+        cex.names=0.5);
+bluesqs_mean_for_plotting <- bluesqs_mean[ d_tone_wide_items_order[, "Items"] ];
+barplot(bluesqs_mean_for_plotting, 
+        horiz = TRUE,
+        col = ifelse(bluesqs_mean_for_plotting < 0, "blue", "red"),
+        main = "B",
+        ylab="", 
+        xlab="Mean tetrachoric correlation", 
+        cex.lab=0.8,
+        cex.axis=0.5,
+        #names.arg=vapply(names(bluesqs_mean_for_plotting), function(s) paste0(s, ifelse(substring(s, 1, nchar(s)-1) %in% d_itmes_real_words, "*", "")), character(1)), 
+        names.arg=rep("",length(bluesqs_mean_for_plotting)),
+        las=2, 
+        cex.names=0.8);
+par(cex=0.4, cex.main=2); plot(as.dendrogram(items_clust), horiz=TRUE, main="C"); par(cex=1.0); 
+dev.off();
+
+cat(paste0(rev(vapply(d_tone_wide_items_order[, "Items"], function(s) paste0(s, ifelse(substring(s, 1, nchar(s)-1) %in% d_itmes_real_words, "*", "")), character(1))), collapse=", "));
+```
 
 #### "Weird" items
 
@@ -1493,6 +1645,26 @@ Likewise, it seems that FA1 really captures the 'same' items and the "weird" 'di
 These observations prompt the question: are the "weird" items really of the 'same' type?
 
 
+```{r results='hide'}
+# for the paper:
+tiff("./paper/figures/FigS6A.tiff", units="in", width=1*5, height=1*5, res=600, compression="lzw", type="cairo");
+fviz_eig(t_pca) + ylab("% explained variance") + xlab(expression("PC"[i])) + ggtitle("A");
+dev.off();
+
+tiff("./paper/figures/FigS6B.tiff", units="in", width=1*5, height=1*5, res=600, compression="lzw", type="cairo");
+fa.parallel(d, fa="fa", n.iter=100, error.bars=TRUE, main="B");
+dev.off();
+
+tiff("./paper/figures/FigS6C.tiff", units="in", width=1*10, height=1*10, res=600, compression="lzw", type="cairo");
+fviz_pca_var(t_pca,
+             col.var = "contrib", # Color by contributions to the PC
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+             ) + ggtitle("C");
+dev.off();
+```
+
+
 ### Are the "weird" items really of the 'same' type?
 
 All these together suggest the hypothesis that the "weird" stimuli, while *designed* as 'different', are, in fact, *perceived* as (albeit rather difficult) 'same' items by the participants.
@@ -1594,6 +1766,70 @@ barplot(bluesqs_flip_mean,
 ```
 
 
+```{r results='hide'}
+# for the paper:
+# barplot of endorsement frequencies (number of respondents with affirmative answers)
+#tiff("./paper/figures/FigS8.tif", width=2*4, height=1*12, units="in", res=600, compression="lzw");
+cairo_ps("./paper/figures/FigS8.eps", width=3*4, height=1*12, onefile=TRUE);
+par(mfrow=c(1,3), oma=c(0,3,0,0), mar=c(3,2,1,1))
+barplot(d_tone_wide_items_order_flip[,"YESCount"], 
+        horiz = TRUE,
+        main = "A",
+        ylab="", 
+        xlab="Number of respondents", 
+        cex.lab=0.8,
+        cex.axis=0.5,
+        names.arg=vapply(d_tone_wide_items_order_flip[, "Items"], function(s) paste0(s, ifelse(substring(s, 1, nchar(s)-1) %in% d_itmes_real_words, "*", "")), character(1)), 
+        las=2, 
+        cex.names=0.5);
+bluesqs_flip_mean_for_plotting <- bluesqs_flip_mean[ d_tone_wide_items_order_flip[, "Items"] ];
+barplot(bluesqs_flip_mean_for_plotting, 
+        horiz = TRUE,
+        col = ifelse(bluesqs_flip_mean_for_plotting < 0, "blue", "red"),
+        main = "B",
+        ylab="", 
+        xlab="Mean tetrachoric correlation", 
+        cex.lab=0.8,
+        cex.axis=0.5,
+        #names.arg=vapply(names(bluesqs_flip_mean_for_plotting), function(s) paste0(s, ifelse(substring(s, 1, nchar(s)-1) %in% d_itmes_real_words, "*", "")), character(1)), 
+        names.arg=rep("",length(bluesqs_flip_mean_for_plotting)),
+        las=2, 
+        cex.names=0.8);
+par(cex=0.4, cex.main=2); plot(as.dendrogram(items_clust), horiz=TRUE, main="C"); par(cex=1.0); 
+dev.off();
+
+jpeg("./paper/figures/FigS8.jpg", width=3*4, height=1*12, units="in", quality=85, res=300);
+par(mfrow=c(1,3), oma=c(0,3,0,0), mar=c(3,2,1,1))
+barplot(d_tone_wide_items_order_flip[,"YESCount"], 
+        horiz = TRUE,
+        main = "A",
+        ylab="", 
+        xlab="Number of respondents", 
+        cex.lab=0.8,
+        cex.axis=0.5,
+        names.arg=vapply(d_tone_wide_items_order_flip[, "Items"], function(s) paste0(s, ifelse(substring(s, 1, nchar(s)-1) %in% d_itmes_real_words, "*", "")), character(1)), 
+        las=2, 
+        cex.names=0.5);
+bluesqs_flip_mean_for_plotting <- bluesqs_flip_mean[ d_tone_wide_items_order_flip[, "Items"] ];
+barplot(bluesqs_flip_mean_for_plotting, 
+        horiz = TRUE,
+        col = ifelse(bluesqs_flip_mean_for_plotting < 0, "blue", "red"),
+        main = "B",
+        ylab="", 
+        xlab="Mean tetrachoric correlation", 
+        cex.lab=0.8,
+        cex.axis=0.5,
+        #names.arg=vapply(names(bluesqs_flip_mean_for_plotting), function(s) paste0(s, ifelse(substring(s, 1, nchar(s)-1) %in% d_itmes_real_words, "*", "")), character(1)), 
+        names.arg=rep("",length(bluesqs_flip_mean_for_plotting)),
+        las=2, 
+        cex.names=0.8);
+par(cex=0.4, cex.main=2); plot(as.dendrogram(items_clust), horiz=TRUE, main="C"); par(cex=1.0); 
+dev.off();
+
+cat(paste0(rev(vapply(d_tone_wide_items_order_flip[, "Items"], function(s) paste0(s, ifelse(substring(s, 1, nchar(s)-1) %in% d_itmes_real_words, "*", "")), character(1))), collapse=", "));
+```
+
+
 #### PCA and FA
 
 ```{r include=FALSE}
@@ -1686,6 +1922,39 @@ It can be seen that:
 - FA2 is composed of all the 'different' items (all presentations and variants, all with the same sign).
 
 Thus, it seems that the main difference now is between the ("extended") 'same' and the 'different' items, which seems to make much more sense.
+
+
+```{r results='hide'}
+# for the paper:
+tiff("./paper/figures/FigS9A.tiff", units="in", width=1*5, height=1*5, res=600, compression="lzw", type="cairo");
+fviz_eig(t_pca_flip) + ylab("% explained variance") + xlab(expression("PC"[i])) + ggtitle("A");
+dev.off();
+
+tiff("./paper/figures/FigS9B.tiff", units="in", width=1*5, height=1*5, res=600, compression="lzw", type="cairo");
+fa.parallel(d, fa="fa", n.iter=100, error.bars=TRUE, main="B");
+dev.off();
+
+tiff("./paper/figures/FigS9C.tiff", units="in", width=1*10, height=1*10, res=600, compression="lzw", type="cairo");
+fviz_pca_var(t_pca_flip,
+             col.var = "contrib", # Color by contributions to the PC
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+             ) + ggtitle("C");
+dev.off();
+```
+
+```{r}
+# Compare PCA and EFA between the original and flipped conditions:
+s <- (abs(t_pca_flip$rotation[,1] - t_pca$rotation[,1]) > 1e-5) | (abs(t_pca_flip$rotation[,2] - t_pca$rotation[,2]) > 1e-5);
+tmp <- merge(t_pca$rotation[s,1:2], t_pca_flip$rotation[s,1:2], by=0, all=TRUE, suffixes=c(".original", ".flipped")); tmp <- tmp[,c(1,2,4,3,5)];
+kable(tmp, digits=2, caption="Differences in PC loadings between the original and 'flipped' datasets (showing only the itmes where the loadings are more different than 10^-5^.");
+#cor.test(tmp[,2], tmp[,3]); cor.test(tmp[,4], tmp[,5]);
+
+s <- (abs(t_fa_2f$loadings[,1] - t_fa_2f_flip$loadings[,1]) > 1e-5) | (abs(t_fa_2f$loadings[,2] - t_fa_2f_flip$loadings[,2]) > 1e-5);
+tmp <- merge(t_fa_2f$loadings[s,1:2], t_fa_2f_flip$loadings[s,1:2], by=0, all=TRUE, suffixes=c(".original", ".flipped")); tmp <- tmp[,c(1,2,4,3,5)];
+kable(tmp, digits=2, caption="Differences in EFA loadings between the original and 'flipped' datasets (showing only the itmes where the loadings are more different than 10^-5^.");
+#cor.test(tmp[,2], tmp[,3]); cor.test(tmp[,4], tmp[,5]);
+```
 
 
 #### MSA
@@ -2477,6 +2746,91 @@ ms_3_3 <- lm(pc_diff_weird ~ pc_same_remv, data=d_all[d_all$ID %in% names(km3$cl
 ```
 This is precisely the pattern to be expected if the "weird" items behave like the 'same' items: the participants with higher performance on the same items have lower performance on the "weird" items because their responses are in fact "flipped".
 
+```{r}
+# for paper:
+#tiff("./paper/figures/FigS7.tiff", units="in", width=2*5, height=2*5, res=600, compression="lzw", type="cairo");
+cairo_ps("./paper/figures/FigS7.eps", width=2*5, height=2*5, onefile=TRUE);
+grid.arrange(
+  # k=2:
+  fviz_cluster(km2, data=d, labelsize=9, geom="point", main="2 clusters") + 
+    geom_smooth(aes(color=cluster), method="lm") + #geom_smooth(aes(color=cluster), method="loess") + 
+    scale_colour_manual(values = colors_k2, label = labels_k2) + 
+    scale_fill_manual(values = colors_k2, label = labels_k2) + 
+    scale_shape_manual(values = shape_k2, label = labels_k2) +
+    xlab("% 'different' remove") + ylab("% 'different' weird") + 
+    theme(legend.position="bottom") + ggtitle("A"),
+  ggplot(d1, aes(x=100*pc_same_remv, y=100*pc_diff_weird, color=km2.cluster, shape=km2.cluster, fill=km2.cluster)) + 
+    geom_point(alpha=0.25) + geom_smooth(method="lm", alpha=0.25) + geom_polygon(data=hull_km2, alpha=0.10, linewidth=0.2) + 
+    scale_colour_manual(name="cluster", values = colors_k2, label=labels_k2) +  
+    scale_fill_manual(name="cluster", values = colors_k2, label=labels_k2) + 
+    scale_shape_manual(name="cluster", values = shape_k2, label=labels_k2) +
+    xlab("% 'same' remove") + ylab("% 'different' weird") + xlim(0,100) + ylim(0,100) + 
+    theme(legend.position="bottom") + ggtitle("B"),
+  # k=3:
+  fviz_cluster(km3, data=d, labelsize=9, geom="point", main="3 clusters") + 
+    geom_smooth(aes(color=cluster), method="lm") + #geom_smooth(aes(color=cluster), method="loess") + 
+    scale_colour_manual(values = colors_k3, label = labels_k3) + 
+    scale_fill_manual(values = colors_k3, label = labels_k3) + 
+    scale_shape_manual(values = shape_k3, label = labels_k3) +
+    xlab("% 'different' remove") + ylab("% 'different' weird") + 
+    theme(legend.position="bottom") + ggtitle("C"),
+  ggplot(d1, aes(x=100*pc_same_remv, y=100*pc_diff_weird, color=km3.cluster, shape=km3.cluster, fill=km3.cluster)) + 
+    geom_point(alpha=0.25) + geom_smooth(method="lm", alpha=0.25) + geom_polygon(data=hull_km3, alpha=0.10, linewidth=0.2) + 
+    scale_colour_manual(name="cluster", values = colors_k3, label=labels_k3) + 
+    scale_fill_manual(name="cluster", values = colors_k3, label=labels_k3) + 
+    scale_shape_manual(name="cluster", values = shape_k3, label=labels_k3) +
+    xlab("% 'same' remove") + ylab("% 'different' weird") + xlim(0,100) + ylim(0,100) + 
+    theme(legend.position="bottom") + ggtitle("D"),
+  # overall:
+  #ggplot(d1, aes(x=100*pc_same_remv, y=100*pc_diff_weird)) + 
+  #  geom_point(alpha=0.25, aes(color="black")) + geom_smooth(method="lm", alpha=0.25, color="gray40") + 
+  #  xlab("% 'same' remove") + ylab("% 'different' weird") + xlim(0,100) + ylim(0,100) + scale_color_identity(name="", labels="participant", guide="legend") + 
+  #  theme(legend.position="bottom") + ggtitle("Whole dataset"),
+  ncol=2);
+dev.off();
+
+jpeg("./paper/figures/FigS7.jpg", units="in", width=2*5, height=2*5, quality=85, res=300);
+grid.arrange(
+  # k=2:
+  fviz_cluster(km2, data=d, labelsize=9, geom="point", main="2 clusters") + 
+    geom_smooth(aes(color=cluster), method="lm") + #geom_smooth(aes(color=cluster), method="loess") + 
+    scale_colour_manual(values = colors_k2, label = labels_k2) + 
+    scale_fill_manual(values = colors_k2, label = labels_k2) + 
+    scale_shape_manual(values = shape_k2, label = labels_k2) +
+    xlab("% 'different' remove") + ylab("% 'different' weird") + 
+    theme(legend.position="bottom") + ggtitle("A"),
+  ggplot(d1, aes(x=100*pc_same_remv, y=100*pc_diff_weird, color=km2.cluster, shape=km2.cluster, fill=km2.cluster)) + 
+    geom_point(alpha=0.25) + geom_smooth(method="lm", alpha=0.25) + geom_polygon(data=hull_km2, alpha=0.10, linewidth=0.2) + 
+    scale_colour_manual(name="cluster", values = colors_k2, label=labels_k2) +  
+    scale_fill_manual(name="cluster", values = colors_k2, label=labels_k2) + 
+    scale_shape_manual(name="cluster", values = shape_k2, label=labels_k2) +
+    xlab("% 'same' remove") + ylab("% 'different' weird") + xlim(0,100) + ylim(0,100) + 
+    theme(legend.position="bottom") + ggtitle("B"),
+  # k=3:
+  fviz_cluster(km3, data=d, labelsize=9, geom="point", main="3 clusters") + 
+    geom_smooth(aes(color=cluster), method="lm") + #geom_smooth(aes(color=cluster), method="loess") + 
+    scale_colour_manual(values = colors_k3, label = labels_k3) + 
+    scale_fill_manual(values = colors_k3, label = labels_k3) + 
+    scale_shape_manual(values = shape_k3, label = labels_k3) +
+    xlab("% 'different' remove") + ylab("% 'different' weird") + 
+    theme(legend.position="bottom") + ggtitle("C"),
+  ggplot(d1, aes(x=100*pc_same_remv, y=100*pc_diff_weird, color=km3.cluster, shape=km3.cluster, fill=km3.cluster)) + 
+    geom_point(alpha=0.25) + geom_smooth(method="lm", alpha=0.25) + geom_polygon(data=hull_km3, alpha=0.10, linewidth=0.2) + 
+    scale_colour_manual(name="cluster", values = colors_k3, label=labels_k3) + 
+    scale_fill_manual(name="cluster", values = colors_k3, label=labels_k3) + 
+    scale_shape_manual(name="cluster", values = shape_k3, label=labels_k3) +
+    xlab("% 'same' remove") + ylab("% 'different' weird") + xlim(0,100) + ylim(0,100) + 
+    theme(legend.position="bottom") + ggtitle("D"),
+  # overall:
+  #ggplot(d1, aes(x=100*pc_same_remv, y=100*pc_diff_weird)) + 
+  #  geom_point(alpha=0.25, aes(color="black")) + geom_smooth(method="lm", alpha=0.25, color="gray40") + 
+  #  xlab("% 'same' remove") + ylab("% 'different' weird") + xlim(0,100) + ylim(0,100) + scale_color_identity(name="", labels="participant", guide="legend") + 
+  #  theme(legend.position="bottom") + ggtitle("Whole dataset"),
+  ncol=2);
+dev.off();
+```
+
+
 
 #### Conclusions
 
@@ -2537,6 +2891,31 @@ gplots::heatmap.2(tmp, cellnote=round(tmp,2), notecol="black", margins=c(12,12),
                            "% total (original)", "% same (original)", "% different (original)", "d' (original)", "c (original)",
                            "% total (recode)",   "% same (recode)",   "% different (recode)",   "d' (recode)",   "c (recode)"));
 ```
+
+```{r}
+# for the paper:
+cairo_ps("./paper/figures/FigS10.eps", width=1*10, height=1*10, onefile=TRUE, fallback_resolution=600);
+gplots::heatmap.2(tmp, cellnote=round(tmp,2), notecol="black", margins=c(12,12), 
+                  labRow=c("age", "years education", "gender (F:M)", "location (A:B)", "working memory", 
+                           "% total (original)", "% same (original)", "% different (original)", "d' (original)", "c (original)",
+                           "% total (recode)",   "% same (recode)",   "% different (recode)",   "d' (recode)",   "c (recode)"), 
+                  labCol=c("age", "years education", "gender (F:M)", "location (A:B)", "working memory", 
+                           "% total (original)", "% same (original)", "% different (original)", "d' (original)", "c (original)",
+                           "% total (recode)",   "% same (recode)",   "% different (recode)",   "d' (recode)",   "c (recode)"));
+dev.off();
+             
+jpeg("./paper/figures/FigS10.jpg", units="in", width=1*10, height=1*10, quality=85, res=300);
+gplots::heatmap.2(tmp, cellnote=round(tmp,2), notecol="black", margins=c(12,12), 
+                  labRow=c("age", "years education", "gender (F:M)", "location (A:B)", "working memory", 
+                           "% total (original)", "% same (original)", "% different (original)", "d' (original)", "c (original)",
+                           "% total (recode)",   "% same (recode)",   "% different (recode)",   "d' (recode)",   "c (recode)"), 
+                  labCol=c("age", "years education", "gender (F:M)", "location (A:B)", "working memory", 
+                           "% total (original)", "% same (original)", "% different (original)", "d' (original)", "c (original)",
+                           "% total (recode)",   "% same (recode)",   "% different (recode)",   "d' (recode)",   "c (recode)"));
+dev.off();
+```
+
+
 
 **Spearman's:**
 
@@ -2709,6 +3088,70 @@ summary(wm_task_results$med_age__education$piecewise$model);
 plot(wm_task_results$med_age__education$piecewise$model, node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=8, width=1), edge_attrs = data.frame(style = "solid", color = "gray80"),digits=2);
 ```
 Moreover, the effect of *age* is split between the direct negative effect and the mediated (negative effect on *years of education*) effect (`r sprintf("d-sep *p*=%s, model comparison *χ*^2^(%d)=%.1f, *p*=%s", scinot(wm_task_results$med_age__education$piecewise$dsep.p), as.numeric(wm_task_results$med_age__education$piecewise$anova[[1]][2,"Df.diff"]), as.numeric(wm_task_results$med_age__education$piecewise$anova[[1]][2,"Chisq.diff"]), wm_task_results$med_age__education$piecewise$anova[[1]][2,"P.value"])`).
+
+```{r}
+# for the paper:
+
+# med_gender__education:
+g <- plot(wm_task_results$med_gender__education$piecewise$model, 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(wm_task_results$med_gender__education$piecewise$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- ifelse(g_edges$estim.std != "-", as.numeric(g_edges$estim.std), as.numeric(g_edges$estim.nstd));
+g_edges$label <- sprintf("%s%.1g%s%s",
+                         ifelse(g_edges$estim.std == "-", "[", ""),
+                         g_edges$estim, 
+                         ifelse(g_edges$estim.std == "-", "]", ""),
+                         ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "wm",   "gender[M]"));
+g <- set_node_attrs(g, "fillcolor", c("white", "white", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black", "black"));
+g <- set_node_attrs(g, "color",     c("black", "black", "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/Fig3A.pdf", file_type="pdf");
+
+
+# med_age__education:
+g <- plot(wm_task_results$med_age__education$piecewise$model, 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(wm_task_results$med_age__education$piecewise$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- ifelse(g_edges$estim.std != "-", as.numeric(g_edges$estim.std), as.numeric(g_edges$estim.nstd));
+g_edges$label <- sprintf("%s%.1g%s%s",
+                         ifelse(g_edges$estim.std == "-", "[", ""),
+                         g_edges$estim, 
+                         ifelse(g_edges$estim.std == "-", "]", ""),
+                         ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "wm",   "age"));
+g <- set_node_attrs(g, "fillcolor", c("white", "white", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black", "black"));
+g <- set_node_attrs(g, "color",     c("black", "black", "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/Fig3B.pdf", file_type="pdf");
+```
+
 
 ### Conclusions
 
@@ -3015,40 +3458,6 @@ if( FORCE_COMPUTE_ALL ||
 }
 ```
 
-```{r include=FALSE, results='hide'}
-# Figure for the paper:
-# unfortunately, because we have a Poisson model for education_years, we can't get standardized coefficients for it
-# so, let's do a chimera: we report the standardized coefficients for all the other paths, but unstandardized for education_years...
-g <- plot(tone_pcr_results$path_model$linearreg$model, show="unstd", 
-          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
-          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
-          return=TRUE);
-g_std <- coefs(tone_pcr_results$path_model$linearreg$model, standardize="scale"); # get the standardized coefficients and p-values
-g_nodes <- get_node_df(g);
-g_edges <- get_edge_df(g);
-g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
-{
-  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
-  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
-}));
-g_edges$estim <- ifelse(g_edges$estim.std != "-", as.numeric(g_edges$estim.std), as.numeric(g_edges$estim.nstd));
-g_edges$label <- sprintf("%s%.1g%s%s",
-                         ifelse(g_edges$estim.std == "-", "[", ""),
-                         g_edges$estim, 
-                         ifelse(g_edges$estim.std == "-", "]", ""),
-                         ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
-g <- set_node_attrs(g, "label",     c("educ",  "age",   "gender",  "wm",    "pcr",         "loc"));
-g <- set_node_attrs(g, "fillcolor", c("white", "white", "white",   "white", "lightyellow", "white"));
-g <- set_node_attrs(g, "fontcolor", c("black", "black", "gray60",  "black", "black",       "black"));
-g <- set_node_attrs(g, "color",     c("black", "black", "gray60",  "black", "black",       "black"));
-g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
-g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
-g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
-render_graph(g);
-DiagrammeR::export_graph(g, file_name="./paper/figures/path_model.pdf", file_type="pdf");
-DiagrammeR::export_graph(g, file_name="./paper/figures/path_model.png", file_type="png", width=10*72, height=10*72); # assuming 72 DPI
-```
-
 We focus here on the *% total correct responses on the 'recoded' dataset* estimate (*pcr* = *p*ercent *c*orrect *r*ecoded).
 Given that these are percents bounded, by definition, between 0% and 100%, we used beta regression (as implemented by `glmmTMB::glmmTMB()`); however, the mediation modelling function `mediation::mediate` has troubles with beta regression, as has `piecewiseSEM::psem()` when it comes to fitting the full mediation model, so we employed in these cases the equivalent linear regressions (the relevant coefficient estimates and p-values are similar enough between the two to ensure that the qualitative conclusions hold).
 Moreover, `piecewiseSEM` has troubles estimating the standardized path coefficients, so we report here the *un*standardized ones.
@@ -3066,16 +3475,32 @@ A beta multiple linear regression on *working memory*, *age*, *gender*, *years o
 summary(tone_pcr_results$multreg);
 ```
 ```{r fig.width=4, fig.height=4, fig.cap=capFig("Untransformed slopes with standard errors.")}
-sjPlot::plot_model(tone_pcr_results$multreg, show.values=TRUE, value.offset=.2, vline.color="gray20", transform=NULL);
+p1 <- sjPlot::plot_model(tone_pcr_results$multreg, show.values=TRUE, value.offset=.2, vline.color="gray20", transform=NULL); p1;
 ```
 ```{r fig.width=4, fig.height=4, fig.cap=capFig("Predicted values of pcr showing the interaction of*gender* and *age*.")}
-sjPlot::plot_model(tone_pcr_results$multreg, type="pred", terms=c("age", "gender")) + ylim(0,1);
+p2 <- sjPlot::plot_model(tone_pcr_results$multreg, type="pred", terms=c("age", "gender")) + ylim(0,1); p2;
 ```
 ```{r fig.width=4, fig.height=4, fig.cap=capFig("Predicted values of pcr showing the interaction of *education_years* and *age*.")}
-sjPlot::plot_model(tone_pcr_results$multreg, type="pred", terms=c("education_years", "age")) + ylim(0,1);
+p3 <- sjPlot::plot_model(tone_pcr_results$multreg, type="pred", terms=c("education_years", "age")) + ylim(0,1) + xlab("education years"); p3;
 ```
 suggesting that *age* and *years of education* have no main effects, that *working memory* does have a positive effect, and that *males* have better performance than the females but there is an interaction between education and age, and between age and gender, and that participants from *A* have better performance than those from B.
 As above, we test more complex of causality using mediation and path analysis.
+
+```{r}
+# for the paper:
+p1 <- sjPlot::plot_model(tone_pcr_results$multreg, show.values=TRUE, value.offset=.2, vline.color="gray20", transform=NULL) + ggtitle("A"); 
+p2 <- sjPlot::plot_model(tone_pcr_results$multreg, type="pred", terms=c("age", "gender")) + ylim(0,1) + ggtitle("B");
+p3 <- sjPlot::plot_model(tone_pcr_results$multreg, type="pred", terms=c("education_years", "age")) + ylim(0,1) + xlab("education years") + ggtitle("C");
+
+cairo_ps("./paper/figures/Fig4.eps", width=3*5, height=1*5, onefile=TRUE, fallback_resolution=600);
+grid.arrange(p1, p2, p3, nrow=1);
+dev.off();
+             
+jpeg("./paper/figures/Fig4.jpg", units="in", width=3*5, height=1*5, quality=85, res=300);
+grid.arrange(p1, p2, p3, nrow=1);
+dev.off();
+```
+
 
 #### Mediation: gender → education → tone
 
@@ -3137,6 +3562,114 @@ plot(tone_pcr_results$med_wm__all$piecewise$linearreg$model, show="unstd", node_
 ```
 It can be seen that, indeed, *working memory* has a positive effect on *tone* while also mediating some of the effects of *age* and *education*.
 
+```{r}
+# for the paper:
+
+# med_gender__education:
+g <- plot(tone_pcr_results$med_gender__education$piecewise$linearreg$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_pcr_results$med_gender__education$piecewise$linearreg$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- as.numeric(g_edges$estim.nstd);
+g_edges$label <- sprintf("%.1g%s", g_edges$estim, ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "pcr",         "gender[M]"));
+g <- set_node_attrs(g, "fillcolor", c("white", "lightyellow", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black",       "gray60"));
+g <- set_node_attrs(g, "color",     c("black", "black",       "gray60"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/Fig5A.pdf", file_type="pdf");
+
+
+# med_age__education:
+g <- plot(tone_pcr_results$med_age__education$piecewise$linearreg$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_pcr_results$med_age__education$piecewise$linearreg$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- as.numeric(g_edges$estim.nstd);
+g_edges$label <- sprintf("%.1g%s", g_edges$estim, ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "pcr",         "age"));
+g <- set_node_attrs(g, "fillcolor", c("white", "lightyellow", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black",       "black"));
+g <- set_node_attrs(g, "color",     c("black", "black",       "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/Fig5B.pdf", file_type="pdf");
+
+
+# med_location__education:
+g <- plot(tone_pcr_results$med_location__education$piecewise$linearreg$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_pcr_results$med_location__education$piecewise$linearreg$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- as.numeric(g_edges$estim.nstd);
+g_edges$label <- sprintf("%.1g%s", g_edges$estim, ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "pcr",         "loc[B]"));
+g <- set_node_attrs(g, "fillcolor", c("white", "lightyellow", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black",       "black"));
+g <- set_node_attrs(g, "color",     c("black", "black",       "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/Fig5C.pdf", file_type="pdf");
+
+
+# complex:
+g <- plot(tone_pcr_results$med_wm__all$piecewise$linearreg$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_pcr_results$med_wm__all$piecewise$linearreg$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- as.numeric(g_edges$estim.nstd);
+g_edges$label <- sprintf("%.1g%s", g_edges$estim, ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("wm",    "pcr",            "educ",  "gender[M]", "age"));
+g <- set_node_attrs(g, "fillcolor", c("white", "lightyellow",    "white", "white",     "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black",          "black", "gray60",    "black"));
+g <- set_node_attrs(g, "color",     c("black", "black",          "black", "gray60",    "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/Fig5D.pdf", file_type="pdf");
+```
+
+
 #### Complex path model
 
 Finally, we fitted a complex path model involving all these factors using `piecewiseSEM::psem()` (with linear regression):
@@ -3147,6 +3680,40 @@ summary(tone_pcr_results$path_model$linearreg$model, .progressBar = FALSE);
 plot(tone_pcr_results$path_model$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6),digits=2);
 ```
 This confirms and extends the previous simpler mediation models in that *pcr* is directly influenced by *working memory* (positively), *years of education* (more is better), *age* (older is better) and *location* (A is better), but also indirectly by *gender* (mediated through *years of education* and *age*); both *age* and *location* also have effects mediated through *years of education*, and *age* and *years of education* have effects mediated through *working memory*. 
+
+```{r include=FALSE, results='hide'}
+# Figure for the paper:
+# unfortunately, because we have a Poisson model for education_years, we can't get standardized coefficients for it
+# so, let's do a chimera: we report the standardized coefficients for all the other paths, but unstandardized for education_years...
+g <- plot(tone_pcr_results$path_model$linearreg$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_pcr_results$path_model$linearreg$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- ifelse(g_edges$estim.std != "-", as.numeric(g_edges$estim.std), as.numeric(g_edges$estim.nstd));
+g_edges$label <- sprintf("%s%.1g%s%s",
+                         ifelse(g_edges$estim.std == "-", "[", ""),
+                         g_edges$estim, 
+                         ifelse(g_edges$estim.std == "-", "]", ""),
+                         ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "age",   "gender[M]",  "wm",    "pcr",         "loc[B]"));
+g <- set_node_attrs(g, "fillcolor", c("white", "white", "white",      "white", "lightyellow", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_node_attrs(g, "color",     c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/Fig6A.pdf", file_type="pdf");
+#DiagrammeR::export_graph(g, file_name="./paper/figures/Fig6A.png", file_type="png", width=10*72, height=10*72); # assuming 72 DPI
+```
 
 #### Conclusions
 
@@ -3401,6 +3968,40 @@ tone_dpr_results$path_model$summary;
 plot(tone_dpr_results$path_model$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6),digits=2);
 ```
 This confirms and extends the previous simpler mediation models in that *dpr* is directly influenced by *working memory* (positively), *years of education* (more is better), *age* (older is better) and *location* (A is better), but also indirectly by *gender* (mediated through *years of education* and *age*); both *age* and *location* also have effects mediated through *years of education*, and *age* and *years of education* have effects mediated through *working memory*.
+
+```{r include=FALSE, results='hide'}
+# Figure for the paper:
+# unfortunately, because we have a Poisson model for education_years, we can't get standardized coefficients for it
+# so, let's do a chimera: we report the standardized coefficients for all the other paths, but unstandardized for education_years...
+g <- plot(tone_dpr_results$path_model$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_dpr_results$path_model$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- ifelse(g_edges$estim.std != "-", as.numeric(g_edges$estim.std), as.numeric(g_edges$estim.nstd));
+g_edges$label <- sprintf("%s%.1g%s%s",
+                         ifelse(g_edges$estim.std == "-", "[", ""),
+                         g_edges$estim, 
+                         ifelse(g_edges$estim.std == "-", "]", ""),
+                         ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "age",   "gender[M]",  "wm",    "dpr",         "loc[B]"));
+g <- set_node_attrs(g, "fillcolor", c("white", "white", "white",      "white", "lightyellow", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_node_attrs(g, "color",     c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/Fig6B.pdf", file_type="pdf");
+#DiagrammeR::export_graph(g, file_name="./paper/figures/Fig6B.png", file_type="png", width=10*72, height=10*72); # assuming 72 DPI
+```
 
 #### Conclusions
 
@@ -4185,6 +4786,190 @@ plot(tone_dpr_results$path_model$model, show="unstd", node_attrs = data.frame(sh
 ```
 ```{r fig.width=5, fig.height=5, fig.cap=capFig("The complex path model for *dpx*.")}
 plot(tone_dpx_results$path_model$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6),digits=3);
+```
+
+```{r include=FALSE, results='hide'}
+# for the paper:
+
+# tone_pco_results
+g <- plot(tone_pco_results$path_model$linearreg$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_pco_results$path_model$linearreg$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- ifelse(g_edges$estim.std != "-", as.numeric(g_edges$estim.std), as.numeric(g_edges$estim.nstd));
+g_edges$label <- sprintf("%s%.3g%s%s",
+                         ifelse(g_edges$estim.std == "-", "[", ""),
+                         g_edges$estim, 
+                         ifelse(g_edges$estim.std == "-", "]", ""),
+                         ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "age",   "gender[M]",  "wm",    "pcr(O)",      "loc[B]"));
+g <- set_node_attrs(g, "fillcolor", c("white", "white", "white",      "white", "lightyellow", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_node_attrs(g, "color",     c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/FigS11A.pdf", file_type="pdf");
+#DiagrammeR::export_graph(g, file_name="./paper/figures/FigS11A.png", file_type="png", width=10*72, height=10*72); # assuming 72 DPI
+
+# tone_pcr_results
+g <- plot(tone_pcr_results$path_model$linearreg$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_pcr_results$path_model$linearreg$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- ifelse(g_edges$estim.std != "-", as.numeric(g_edges$estim.std), as.numeric(g_edges$estim.nstd));
+g_edges$label <- sprintf("%s%.3g%s%s",
+                         ifelse(g_edges$estim.std == "-", "[", ""),
+                         g_edges$estim, 
+                         ifelse(g_edges$estim.std == "-", "]", ""),
+                         ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "age",   "gender[M]",  "wm",    "pcr(R)",      "loc[B]"));
+g <- set_node_attrs(g, "fillcolor", c("white", "white", "white",      "white", "lightyellow", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_node_attrs(g, "color",     c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/FigS11B.pdf", file_type="pdf");
+#DiagrammeR::export_graph(g, file_name="./paper/figures/FigS11B.png", file_type="png", width=10*72, height=10*72); # assuming 72 DPI
+
+# tone_pcx_results
+g <- plot(tone_pcx_results$path_model$linearreg$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_pcx_results$path_model$linearreg$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- ifelse(g_edges$estim.std != "-", as.numeric(g_edges$estim.std), as.numeric(g_edges$estim.nstd));
+g_edges$label <- sprintf("%s%.3g%s%s",
+                         ifelse(g_edges$estim.std == "-", "[", ""),
+                         g_edges$estim, 
+                         ifelse(g_edges$estim.std == "-", "]", ""),
+                         ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "age",   "gender[M]",  "wm",    "pcr(X)",      "loc[B]"));
+g <- set_node_attrs(g, "fillcolor", c("white", "white", "white",      "white", "lightyellow", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_node_attrs(g, "color",     c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/FigS11C.pdf", file_type="pdf");
+#DiagrammeR::export_graph(g, file_name="./paper/figures/FigS11C.png", file_type="png", width=10*72, height=10*72); # assuming 72 DPI
+
+# tone_dpo_results
+g <- plot(tone_dpo_results$path_model$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_dpo_results$path_model$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- ifelse(g_edges$estim.std != "-", as.numeric(g_edges$estim.std), as.numeric(g_edges$estim.nstd));
+g_edges$label <- sprintf("%s%.3g%s%s",
+                         ifelse(g_edges$estim.std == "-", "[", ""),
+                         g_edges$estim, 
+                         ifelse(g_edges$estim.std == "-", "]", ""),
+                         ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "age",   "gender[M]",  "wm",    "d′(O)",       "loc[B]"));
+g <- set_node_attrs(g, "fillcolor", c("white", "white", "white",      "white", "lightyellow", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_node_attrs(g, "color",     c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/FigS11D.pdf", file_type="pdf");
+#DiagrammeR::export_graph(g, file_name="./paper/figures/FigS11D.png", file_type="png", width=10*72, height=10*72); # assuming 72 DPI
+
+# tone_dpr_results
+g <- plot(tone_dpr_results$path_model$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_dpr_results$path_model$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- ifelse(g_edges$estim.std != "-", as.numeric(g_edges$estim.std), as.numeric(g_edges$estim.nstd));
+g_edges$label <- sprintf("%s%.3g%s%s",
+                         ifelse(g_edges$estim.std == "-", "[", ""),
+                         g_edges$estim, 
+                         ifelse(g_edges$estim.std == "-", "]", ""),
+                         ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "age",   "gender[M]",  "wm",    "d′(R)",       "loc[B]"));
+g <- set_node_attrs(g, "fillcolor", c("white", "white", "white",      "white", "lightyellow", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_node_attrs(g, "color",     c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/FigS11E.pdf", file_type="pdf");
+#DiagrammeR::export_graph(g, file_name="./paper/figures/FigS11E.png", file_type="png", width=10*72, height=10*72); # assuming 72 DPI
+
+# tone_dpx_results
+g <- plot(tone_dpx_results$path_model$model, show="unstd", 
+          node_attrs = data.frame(shape = "circle", color = "black", fillcolor = "white", fixedsize=FALSE, fontsize=6), 
+          edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6), 
+          return=TRUE);
+g_std <- coefs(tone_dpx_results$path_model$model, standardize="scale"); # get the standardized coefficients and p-values
+g_nodes <- get_node_df(g);
+g_edges <- get_edge_df(g);
+g_edges <- do.call(rbind, lapply(1:nrow(g_edges), function(i)
+{
+  g_estim <- g_std[ g_std$Response == g_nodes$label[g_edges$to[i]] & g_std$Predictor == g_nodes$label[g_edges$from[i]], ];
+  cbind(g_edges[i,], "estim.nstd"=g_estim$Estimate[1], "estim.std"=g_estim$Std.Estimate[1], "p.val"=g_estim$P.Value[1]);
+}));
+g_edges$estim <- ifelse(g_edges$estim.std != "-", as.numeric(g_edges$estim.std), as.numeric(g_edges$estim.nstd));
+g_edges$label <- sprintf("%s%.3g%s%s",
+                         ifelse(g_edges$estim.std == "-", "[", ""),
+                         g_edges$estim, 
+                         ifelse(g_edges$estim.std == "-", "]", ""),
+                         ifelse(g_edges$p.val<0.001, "***", ifelse(g_edges$p.val<0.01, "**", ifelse(g_edges$p.val<0.05, "*", ""))));
+g <- set_node_attrs(g, "label",     c("educ",  "age",   "gender[M]",  "wm",    "d′(X)",       "loc[B]"));
+g <- set_node_attrs(g, "fillcolor", c("white", "white", "white",      "white", "lightyellow", "white"));
+g <- set_node_attrs(g, "fontcolor", c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_node_attrs(g, "color",     c("black", "black", "gray60",     "black", "black",       "black"));
+g <- set_edge_attrs(g, "color",     ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "darkorange", "deepskyblue"), "gray90"));
+g <- set_edge_attrs(g, "fontcolor", ifelse(g_edges$style == "solid", ifelse(as.numeric(g_edges$estim) > 0, "firebrick", "navyblue"), "gray60"));
+g <- set_edge_attrs(g, "label",     ifelse(g_edges$style == "solid", g_edges$label, ""));
+render_graph(g);
+DiagrammeR::export_graph(g, file_name="./paper/figures/FigS11F.pdf", file_type="pdf");
+#DiagrammeR::export_graph(g, file_name="./paper/figures/FigS11F.png", file_type="png", width=10*72, height=10*72); # assuming 72 DPI
 ```
 
 

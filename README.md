@@ -1,6 +1,7 @@
-# Using psychometrics and Signal Detection Theory to investigate tone perception in 490 native speakers of Kam (Dong): Supplementary Materials (full analysis report)
+# Using psychometrics and Signal Detection Theory to investigate tone perception in 490 native speakers of Kam (Dong): the Analysis report
 
-This contains the full analysis report (aka **Supplementary Materials**) accompanying the paper *Using psychometrics and Signal Detection Theory to investigate tone perception in 490 native speakers of Kam (Dong)* as well as the code needed to reproduce it.
+This contains the full analysis report accompanying the paper *Using psychometrics and Signal Detection Theory to investigate tone perception in 490 native speakers of Kam (Dong)* as well as the code needed to reproduce it.
+The high-quality figures are available in the `./high_res_figs` folder.
 
 Please note that, due to newer restrictions on data export enacted by the government of China, the primary data (housed in the folder `./input_files`) are **not** included and must be requested from the corresponding author (Manxiang Wu <manxiangwu1022@163.com>), as instructed in the paper.
 As a consequence, the code will **not run** without the primary data, but the already compiled output document is included.
