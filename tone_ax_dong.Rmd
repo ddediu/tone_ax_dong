@@ -136,6 +136,7 @@ library(gplots); # heatmap.2
 library(sjPlot); # effect plots
 library(viridis); # color-blind-friendly palette
 library(DiagrammeR); # plotting networks
+library(png); # needed by lavaanPlot::embed_plot_pdf()
 
 # Regression and mediation analysis:
 library(lmerTest); # ML mixed-effects models
@@ -143,6 +144,7 @@ library(glmmTMB); # beta regression
 library(performance); # multicollinearity
 library(DHARMa); # check dispersion
 library(mediation); # mediation
+library(car); # VIF
 
 # MD5 checksums:
 library(tools);
@@ -2982,6 +2984,7 @@ if( FORCE_COMPUTE_ALL ||
                    age:education_years - age:gender - gender:education_years # 2-way interactions
   ); summary(m_wm); (anova_m_wm = anova(m_wm, m_wm_full));
   # -> age (-0.0058), gender (M: -0.032) and education_years (0.021) matter
+  m_wm_vif <- car::vif(m_wm); # all < 1.9
   
   
   ## Mediation models:
@@ -3029,7 +3032,7 @@ if( FORCE_COMPUTE_ALL ||
   
   # save them to file:
   wm_task_results <- list("icc_fam"=icc_wm__fam, "m_gen"=summary(m_wm__gen), "m_location"=summary(m_wm__location), # checks
-                          "multreg"=summary(m_wm), # multiple regression model
+                          "multreg"=summary(m_wm), "vif"=m_wm_vif, # multiple regression model
                           "med_gender__education"=list("mediation"=summary(med_wm_gender),
                                                     "piecewise"=list("model"=psem_wm_gender, "dsep.p"=piecewiseSEM::dSep(psem_wm_gender_full, .progressBar = FALSE)$P.Value, "anova"=psem_anova_wm_gender)),
                           "med_age__education"=list("mediation"=summary(med_wm_age),
@@ -3057,6 +3060,11 @@ wm_task_results$multreg;
 sjPlot::plot_model(wm_task_results$multreg, show.values=TRUE, value.offset=.2, vline.color="gray20", transform=NULL);
 ```
 suggesting that *age* has a negative effect, *years of education* a positive effect, and that males have worse performance than the females.
+Moreover, the VIF (Variance Inflation Factors) of the retained predictors are:
+```{r}
+pander(wm_task_results$vif);
+```
+which, using a very conservative cut-off point of 3, suggest that there is no multicollinearity.
 However, it is possible that the causal model is more complex, with the effect of *gender* and *age* largely mediated by the *years of education*.
 
 ### Mediation: gender → education → working memory
@@ -3285,6 +3293,7 @@ if( FORCE_COMPUTE_ALL ||
   sjPlot::plot_model(m_pcr, transform=NULL); 
   sjPlot::plot_model(m_pcr, type="pred", terms=c("age", "gender"));
   sjPlot::plot_model(m_pcr, type="pred", terms=c("education_years", "age"));
+  m_pcr_vif <- car::vif(lm(formula(m_pcr), data=d), type="predictor"); # refit as a linear model as glmmTMB does not currently work and switching to linear should not be an issue in this case: all < 3 except for gender (11.4)
 
   
   ## Mediation models:
@@ -3387,7 +3396,7 @@ if( FORCE_COMPUTE_ALL ||
   (psem_anova_pcr_location <- anova(psem_pcr_location, psem_pcr_location_full)); # p = 1e-04 ***
   # -> the direct effect is needed
   
-  ## working memory has a direct effect besides education, age and gender would predict:
+  ## working memory has a direct effect besides what education, age and gender would predict:
   med_pcr__mediator <-  lm(wm_norm ~ education_years + gender_n + age, data=d); summary(med_pcr__mediator);
   med_pcr__outcome  <- lm(pcr ~ wm_norm + education_years + gender_n + age, data=d); summary(med_pcr__outcome); # mediation::mediate cannot do beta regression so let's use linear regression instead...
   summary(glmmTMB(pcr ~ wm_norm + education_years + gender_n + age, family=beta_family(), control=beta_ctrl, data=d)); # ... and the estimates and p-values are very similar between the two
@@ -3433,23 +3442,64 @@ if( FORCE_COMPUTE_ALL ||
   plot(psem_pcr_path, show="unstd"); # standardized not available
   
   
+  ## No gender:
+  
+  # multiple regression:
+  m_pcr_full_ng <- glmmTMB(pcr ~ age * education_years * location_ab * wm_norm, family=beta_family(), control=beta_ctrl, data=d); summary(m_pcr_full_ng);
+  m_pcr_ng <- update(m_pcr_full_ng, . ~ . -
+                       age:education_years:location_ab:wm_norm - # 4-way interaction
+                       education_years:location_ab:wm_norm - age:education_years:wm_norm - age:education_years:location_ab - age:location_ab:wm_norm - # 3-way interactions
+                       age:wm_norm - age:location_ab - education_years:wm_norm - location_ab:wm_norm - education_years:location_ab # 2-way interactions
+  ); summary(m_pcr_ng); (anova_m_pcr_ng = anova(m_pcr_ng, m_pcr_full_ng));
+  sjPlot::plot_model(m_pcr_ng, transform=NULL); 
+  sjPlot::plot_model(m_pcr_ng, type="pred", terms=c("age", "education_years"));
+  m_pcr_vif_ng <- car::vif(lm(formula(m_pcr_ng), data=d), type="predictor"); # refit as a linear model as glmmTMB does not currently work and switching to linear should not be an issue in this case: all < 3
+  
+  ## working memory has a direct effect besides what education and age would predict:
+  med_pcr__mediator_ng <-  lm(wm_norm ~ education_years + age, data=d); summary(med_pcr__mediator_ng);
+  med_pcr__outcome_ng  <- lm(pcr ~ wm_norm + education_years + age, data=d); summary(med_pcr__outcome_ng); # mediation::mediate cannot do beta regression so let's use linear regression instead...
+  summary(glmmTMB(pcr ~ wm_norm + education_years + age, family=beta_family(), control=beta_ctrl, data=d)); # ... and the estimates and p-values are very similar between the two
+  med_pcr_wm_ng <- mediation::mediate(med_pcr__mediator_ng, med_pcr__outcome_ng, mediator="wm_norm", treat="education_years", outcome="pcr", sims=10000, robustSE=TRUE); summary(med_pcr_wm_ng); plot(med_pcr_wm_ng);
+
+  psem_pcr_wm_ng <- piecewiseSEM::psem( # with indirect effect (aka partial mediation)
+    lm(wm_norm ~ education_years + age, data=d),
+    lm(pcr ~ wm_norm + education_years + age, data=d),
+    data=d);
+  (summary_psem_pcr_wm_ng <- summary(psem_pcr_wm_ng, .progressBar = FALSE));
+  plot(psem_pcr_wm_ng, show="unstd"); # standardized not available
+    
+  # More complex path model: use linear regression (relatively similar estimates and p-values):
+  psem_pcr_path_ng <- piecewiseSEM::psem(
+    glm(education_years ~ age + location_bin, family=poisson(), data=d), # age + gender -> education
+    lm(age ~ location_bin, data=d), # location + gender -> age
+    lm(wm_norm ~ education_years + age, data=d), # age + gender + education -> wm
+    lm(pcr ~ wm_norm + age + education_years + location_bin, data=d), # all -> pcr
+    data=d);
+  (summary_psem_pcr_path_ng <- summary(psem_pcr_path_ng, .progressBar = FALSE));
+  plot(psem_pcr_path_ng, show="unstd"); # standardized not available
+  
+  
   # save them to file:
   tone_pcr_results <- list("icc_fam"=icc_pcr__fam ,"anova_fam"=anova_pcr__fam, "m_gen"=summary(m_pcr__gen), "m_location"=summary(m_pcr__location), # checks
-                           "multreg"=m_pcr, # multiple regression model
+                           "multreg"=m_pcr, "vif"=m_pcr_vif, # multiple regression model
                            "med_gender__education"=list("mediation"=summary(med_pcr_gender),
-                                                     "piecewise"=list("betareg"=list("model"=psem_pcr_gender_beta, "summary"=summary_psem_pcr_gender_beta),
-                                                                      "linearreg"=list("model"=psem_pcr_gender, "dsep.p"=piecewiseSEM::dSep(psem_pcr_gender_full, .progressBar = FALSE)$P.Value, "anova"=psem_anova_pcr_gender))),
+                                                        "piecewise"=list("betareg"=list("model"=psem_pcr_gender_beta, "summary"=summary_psem_pcr_gender_beta),
+                                                                         "linearreg"=list("model"=psem_pcr_gender, "dsep.p"=piecewiseSEM::dSep(psem_pcr_gender_full, .progressBar = FALSE)$P.Value, "anova"=psem_anova_pcr_gender))),
                            "med_age__education"=list("mediation"=summary(med_pcr_age),
                                                      "piecewise"=list("betareg"=list("model"=psem_pcr_age_beta, "summary"=summary_psem_pcr_age_beta),
                                                                       "linearreg"=list("model"=psem_pcr_age, "dsep.p"=piecewiseSEM::dSep(psem_pcr_age_full, .progressBar = FALSE)$P.Value, "anova"=psem_anova_pcr_age))),
                            "med_location__education"=list("mediation"=summary(med_pcr_location),
-                                                     "piecewise"=list("betareg"=list("model"=psem_pcr_location_beta, "summary"=summary_psem_pcr_location_beta),
-                                                                      "linearreg"=list("model"=psem_pcr_location, "dsep.p"=piecewiseSEM::dSep(psem_pcr_location_full, .progressBar = FALSE)$P.Value, "anova"=psem_anova_pcr_location))),
+                                                          "piecewise"=list("betareg"=list("model"=psem_pcr_location_beta, "summary"=summary_psem_pcr_location_beta),
+                                                                           "linearreg"=list("model"=psem_pcr_location, "dsep.p"=piecewiseSEM::dSep(psem_pcr_location_full, .progressBar = FALSE)$P.Value, "anova"=psem_anova_pcr_location))),
                            "med_wm__all"=list("mediation"=summary(med_pcr_wm),
                                               "piecewise"=list("betareg"=list("model"=psem_pcr_wm_beta, "summary"=summary_psem_pcr_wm_beta),
                                                                "linearreg"=list("model"=psem_pcr_wm))),
                            "path_model"=list("betareg"=list("model"=psem_pcr_path_beta, "summary"=summary_psem_pcr_path_beta),
                                              "linearreg"=list("model"=psem_pcr_path, "summary"=summary_psem_pcr_path)),
+                           "no_gender"=list("multreg"=m_pcr_ng, "vif"=m_pcr_vif_ng,
+                                            "med_wm__all"=list("mediation"=summary(med_pcr_wm_ng),
+                                                               "piecewise"=list("linearreg"=list("model"=psem_pcr_wm_ng))),
+                                            "path_model"=list("linearreg"=list("model"=psem_pcr_path_ng, "summary"=summary_psem_pcr_path_ng))),
                            "data"=d);
   saveRDS(tone_pcr_results, file=xzfile("./cached_results/tone_pcr_results.rds", compression=9));
 } else
@@ -3486,7 +3536,7 @@ p3 <- sjPlot::plot_model(tone_pcr_results$multreg, type="pred", terms=c("educati
 suggesting that *age* and *years of education* have no main effects, that *working memory* does have a positive effect, and that *males* have better performance than the females but there is an interaction between education and age, and between age and gender, and that participants from *A* have better performance than those from B.
 As above, we test more complex of causality using mediation and path analysis.
 
-```{r}
+```{r results='hide'}
 # for the paper:
 p1 <- sjPlot::plot_model(tone_pcr_results$multreg, show.values=TRUE, value.offset=.2, vline.color="gray20", transform=NULL) + ggtitle("A"); 
 p2 <- sjPlot::plot_model(tone_pcr_results$multreg, type="pred", terms=c("age", "gender")) + ylim(0,1) + ggtitle("B");
@@ -3562,7 +3612,7 @@ plot(tone_pcr_results$med_wm__all$piecewise$linearreg$model, show="unstd", node_
 ```
 It can be seen that, indeed, *working memory* has a positive effect on *tone* while also mediating some of the effects of *age* and *education*.
 
-```{r}
+```{r results='hide'}
 # for the paper:
 
 # med_gender__education:
@@ -3761,7 +3811,7 @@ if( FORCE_COMPUTE_ALL ||
   sjPlot::plot_model(m_dpr, transform=NULL); 
   sjPlot::plot_model(m_dpr, type="pred", terms=c("education_years", "gender")); 
   sjPlot::plot_model(m_dpr, type="pred", terms=c("education_years", "age"));
-
+  m_dpr_vif <- car::vif(m_dpr, type="predictor"); # all < 3, except gender (25)
   
   ## Mediation models:
   # gender is a proxy for education:
@@ -3851,9 +3901,47 @@ if( FORCE_COMPUTE_ALL ||
   (summary_psem_dpr_path <- summary(psem_dpr_path, .progressBar = FALSE));
   plot(psem_dpr_path, show="unstd"); # standardized not available
   
+  
+  ## No gender:
+  
+  # multiple regression:
+  m_dpr_full_ng <- lm(dpr ~ age * education_years * location_ab * wm_norm, data=d); summary(m_dpr_full_ng);
+  m_dpr_ng <- update(m_dpr_full_ng, . ~ . -
+                       age:education_years:location_ab:wm_norm - # 4-way interaction
+                       education_years:location_ab:wm_norm - age:education_years:wm_norm - age:education_years:location_ab - age:location_ab:wm_norm - # 3-way interactions
+                       age:location_ab - age:wm_norm - location_ab:wm_norm - education_years:wm_norm # 2-way interactions
+  ); summary(m_dpr_ng); (anova_m_dpr_ng = anova(m_dpr_ng, m_dpr_full_ng));
+  sjPlot::plot_model(m_dpr_ng, transform=NULL); 
+  sjPlot::plot_model(m_dpr_ng, type="pred", terms=c("age", "education_years"));
+  m_dpr_vif_ng <- car::vif(m_dpr_ng, type="predictor"); # all < 3, except for location_ab (25)
+  
+  ## working memory has a direct effect besides what education and age would predict:
+  med_dpr__mediator_ng <-  lm(wm_norm ~ education_years + age, data=d); summary(med_dpr__mediator_ng);
+  med_dpr__outcome_ng  <- lm(dpr ~ wm_norm + education_years + age, data=d); summary(med_dpr__outcome_ng); # mediation::mediate cannot do beta regression so let's use linear regression instead...
+  summary(lm(dpr ~ wm_norm + education_years + age, data=d)); # ... and the estimates and p-values are very similar between the two
+  med_dpr_wm_ng <- mediation::mediate(med_dpr__mediator_ng, med_dpr__outcome_ng, mediator="wm_norm", treat="education_years", outcome="dpr", sims=10000, robustSE=TRUE); summary(med_dpr_wm_ng); plot(med_dpr_wm_ng);
+
+  psem_dpr_wm_ng <- piecewiseSEM::psem( # with indirect effect (aka partial mediation)
+    lm(wm_norm ~ education_years + age, data=d),
+    lm(dpr ~ wm_norm + education_years + age, data=d),
+    data=d);
+  (summary_psem_dpr_wm_ng <- summary(psem_dpr_wm_ng, .progressBar = FALSE));
+  plot(psem_dpr_wm_ng, show="unstd"); # standardized not available
+    
+  # More complex path model: use linear regression (relatively similar estimates and p-values):
+  psem_dpr_path_ng <- piecewiseSEM::psem(
+    glm(education_years ~ age + location_bin, family=poisson(), data=d), # age + gender -> education
+    lm(age ~ location_bin, data=d), # location + gender -> age
+    lm(wm_norm ~ education_years + age, data=d), # age + gender + education -> wm
+    lm(dpr ~ wm_norm + age + education_years + location_bin, data=d), # all -> dpr
+    data=d);
+  (summary_psem_dpr_path_ng <- summary(psem_dpr_path_ng, .progressBar = FALSE));
+  plot(psem_dpr_path_ng, show="unstd"); # standardized not available
+
+    
   # save them to file:
   tone_dpr_results <- list("icc_fam"=icc_dpr__fam, "m_gen"=summary(m_dpr__gen), "m_location"=summary(m_dpr__location), # checks
-                           "multreg"=m_dpr, # multiple regression model
+                           "multreg"=m_dpr, "vif"=m_dpr_vif, # multiple regression model
                            "med_gender__education"=list("mediation"=summary(med_dpr_gender),
                                                      "piecewise"=list("model"=psem_dpr_gender, "dsep.p"=piecewiseSEM::dSep(psem_dpr_gender_full, .progressBar = FALSE)$P.Value, "anova"=psem_anova_dpr_gender)),
                            "med_age__education"=list("mediation"=summary(med_dpr_age),
@@ -3863,6 +3951,10 @@ if( FORCE_COMPUTE_ALL ||
                            "med_wm__all"=list("mediation"=summary(med_dpr_wm),
                                               "piecewise"=list("model"=psem_dpr_wm, "summary"=summary_psem_dpr_wm)),
                            "path_model"=list("model"=psem_dpr_path, "summary"=summary_psem_dpr_path),
+                           "no_gender"=list("multreg"=m_dpr_ng, "vif"=m_dpr_vif_ng,
+                                            "med_wm__all"=list("mediation"=summary(med_dpr_wm_ng),
+                                                               "piecewise"=list("linearreg"=list("model"=psem_dpr_wm_ng))),
+                                            "path_model"=list("linearreg"=list("model"=psem_dpr_path_ng, "summary"=summary_psem_dpr_path_ng))),
                            "data"=d);
   saveRDS(tone_dpr_results, file=xzfile("./cached_results/tone_dpr_results.rds", compression=9));
 } else
@@ -4996,7 +5088,7 @@ Putting everything together, it seems that:
 
 # Appendices
 
-## Appendix I
+## Appendix I: technical details about the methods
 
 Here we give some technical details, also citing the most important methodological packages we use in this paper.
 
@@ -5020,9 +5112,7 @@ Logistic regression is implemented by `glm(..., family=binomial("logit"))` or `g
 ***Path models:*** we used the piecewise Structural Equation Modelling approach as implemented by `psem(...)` in package `piecewiseSEM` [@lefcheck_piecewisesem_2016] and `lavaan` [@lavaan_2012].
 
 
-
-
-## Appendix II
+## Appendix II: % correct responses vs SDT
 
 Here we present some examples of responses on an AX task (such as the tone task here) where *pcr* fails to distinguish clearly different response patterns, but the SDT-derived discrimination and bias do.
 
@@ -5081,6 +5171,380 @@ kable(sdt.examples %>%
       align=c("r", "r", "r", "r"),
       caption=capTab(paste0("Some examples of reponse patterns (1^st^ column) for a total of ",n.items," items equally distributed between \"signal\" (A ≠ X, ",n.items/2," items) and \"non-signal\" (A = X, ",n.items/2," items) that result in very similar % correct responses (3^rd^ column) but that may be disambiguated by SDT-derived measures of discrimination and bias: 4^th^ column gives the parametric estimates *d*', *β* and *c*, while the last column the non-parametric ones *A*' and *B*''~*D*~, showing a dash if the estimation results in not-a-number (`NaN`). Please see text for details about these estimates. The 2^nd^ column gives the counts in the order hits:false alarms:misses:correct rejections.")));
 ```
+
+
+## Appendix III: excluding *gender* from the analyses
+
+Here, we look in mode detail at *gender*: as one reviewer expressed some doubts about this variable, its role in our models, and its apparently high pairwise correlations with other predictors, we decided to investigate, on the one hand, if there are any multicollinearity issues in the multiple regressions models we use and, on the other, to see if excluding it from the analyses has any noticeable effects on the results.
+As detailed below, given that it does not, we limit our investigation to the two primary measures only.
+
+
+### % correct total (recode)
+
+As a reminder, this is the manually simplified multiple regression model that included *gender*:
+```{r}
+summary(tone_pcr_results$multreg);
+```
+
+The (Generalized) VIFs for this model are:
+```{r}
+pander(tone_pcr_results$vif[,c("GVIF", "Df", "GVIF^(1/(2*Df))", "Interacts With")]);
+```
+and are all < 3 except for *gender* and (to a much lesser degree) *education_years*, both interacting with *age*. However, the adjusted generalized standard error inflation factors (aGSIFs; the `GVIF^(1/(2*Df))`) are all lower than $\sqrt{3} \approx$  `r round(sqrt(3),2)`, suggesting that there is no multicollinearity to worry about (see @fox_generalized_1992, as cited in https://www.bookdown.org/rwnahhas/RMPH/mlr-collinearity.html).
+Nevertheless, we have also fitted the relevant models excluding it.
+
+The VIFs of the original multiple regression (reminder):
+```{r}
+pander(tone_pcr_results$vif[,c("GVIF", "Df", "GVIF^(1/(2*Df))", "Interacts With")]);
+```
+
+The multiple regression (manually simplified) without *gender*:
+```{r}
+summary(tone_pcr_results$no_gender$multreg);
+```
+```{r fig.width=4, fig.height=4, fig.cap=capFig("Untransformed slopes with standard errors.")}
+sjPlot::plot_model(tone_pcr_results$no_gender$multreg, show.values=TRUE, value.offset=.2, vline.color="gray20", transform=NULL);
+```
+```{r fig.width=4, fig.height=4, fig.cap=capFig("Predicted values of pcr showing the interaction of *education_years* and *age*.")}
+sjPlot::plot_model(tone_pcr_results$no_gender$multreg, type="pred", terms=c("education_years", "age")) + ylim(0,1) + xlab("education years");
+```
+The (Generalized) VIFs for this model are:
+```{r}
+pander(tone_pcr_results$no_gender$vif[,c("GVIF", "Df", "GVIF^(1/(2*Df))", "Interacts With")]);
+```
+and, as expected, all < 3.
+
+The relevant mediation and path models now are:
+
+```{r}
+summary(tone_pcr_results$no_gender$med_wm__all$piecewise$linearreg$model, .progressBar = FALSE);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("Mediation model of *age*, *years of education* and *pcr* showing the *un*standardized coefficients (fitted using `piecewiseSEM::psem()`).")}
+plot(tone_pcr_results$no_gender$med_wm__all$piecewise$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=8, width=1), edge_attrs = data.frame(style = "solid", color = "gray80"),digits=2);
+```
+
+```{r}
+summary(tone_pcr_results$no_gender$path_model$linearreg$model, .progressBar = FALSE);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("The complex path model for *pcr* showing the *un*standardized coefficients (fitted using `piecewiseSEM::psem()`).")}
+plot(tone_pcr_results$no_gender$path_model$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6),digits=2);
+```
+
+It can be seen that the results are virtually identical.
+
+
+### d' (recode)
+
+As a reminder, this is the manually simplified multiple regression model that included *gender*:
+```{r}
+summary(tone_dpr_results$multreg);
+```
+
+The (Generalized) VIFs for this model are:
+```{r}
+pander(tone_dpr_results$vif[,c("GVIF", "Df", "GVIF^(1/(2*Df))", "Interacts With")]);
+```
+and are all < 3 except for *gender*, interacting with *education_years*, but all aGSIFs are, again, all lower than $\sqrt{3} \approx$  `r round(sqrt(3),2)`, suggesting that there is no multicollinearity to worry about.
+As above, we also fit the relevant models excluding *gender*.
+
+The VIFs of the original multiple regression (reminder):
+```{r}
+pander(tone_dpr_results$vif[,c("GVIF", "Df", "GVIF^(1/(2*Df))", "Interacts With")]);
+```
+
+The multiple regression (manually simplified) without *gender*:
+```{r}
+summary(tone_dpr_results$no_gender$multreg);
+```
+```{r fig.width=4, fig.height=4, fig.cap=capFig("Untransformed slopes with standard errors.")}
+sjPlot::plot_model(tone_dpr_results$no_gender$multreg, show.values=TRUE, value.offset=.2, vline.color="gray20", transform=NULL);
+```
+```{r fig.width=4, fig.height=4, fig.cap=capFig("Predicted values of dpr showing the interaction of *education_years* and *age*.")}
+sjPlot::plot_model(tone_dpr_results$no_gender$multreg, type="pred", terms=c("education_years", "age")) + ylim(0,6) + xlab("education years");
+```
+The (Generalized) VIFs for this model are:
+```{r}
+pander(tone_dpr_results$no_gender$vif[,c("GVIF", "Df", "GVIF^(1/(2*Df))", "Interacts With")]);
+```
+and, as expected, all < 3 except for *location_ab*, but whose aGVIF is < 2.
+
+The relevant mediation and path models now are:
+
+```{r}
+summary(tone_dpr_results$no_gender$med_wm__all$piecewise$linearreg$model, .progressBar = FALSE);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("Mediation model of *age*, *years of education* and *dpr* showing the *un*standardized coefficients (fitted using `piecewiseSEM::psem()`).")}
+plot(tone_dpr_results$no_gender$med_wm__all$piecewise$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=8, width=1), edge_attrs = data.frame(style = "solid", color = "gray80"),digits=2);
+```
+
+```{r}
+summary(tone_dpr_results$no_gender$path_model$linearreg$model, .progressBar = FALSE);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("The complex path model for *dpr* showing the *un*standardized coefficients (fitted using `piecewiseSEM::psem()`).")}
+plot(tone_dpr_results$no_gender$path_model$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6),digits=2);
+```
+
+It can be seen that the results are virtually identical.
+
+
+### Forcing the same number of males and females
+
+The same reviewer expressed skepticism about our results because, quoting, "you have double the amount of women than men, which might be why [...] find an effect of female gender (mediated by other predictors)".
+This can be tested in various ways, one of the simplest is downsampling (randomly) so that we have the same number of males and females in the dataset.
+We focus only on the % correct total (recode) for illustration purposes.
+
+The subsample has very similar distributions to the original sample, but now having a perfectly balanced gender distribution:
+
+```{r}
+d_all$pcr <- prepare_for_beta_regression(d_all$pc_tot_recd);
+cat("Gender distribution (original):\n");
+table(d_all$gender);
+
+set.seed(42); # ensure reproducibility
+d_subset <- d_all[ c(which(d_all$gender == "M"), sample(which(d_all$gender == "F"), replace=FALSE, size=sum(d_all$gender == "M"))), ];
+cat("Gender distribution (subsample):\n");
+table(d_subset$gender);
+
+cat("Gender by location distribution (original):\n");
+round(100*prop.table(table(d_all$gender, d_all$location)),1); # roughly 50:50 across A and B
+cat("Gender by location distribution (subsample):\n");
+round(100*prop.table(table(d_subset$gender, d_subset$location)),1); # roughly 50:50 across A and B and genders
+
+ggplot(d_all, aes(x=age, fill=gender)) + geom_histogram(color="white", alpha=0.5) + ggtitle("Gender by age distribution (original)"); # very similar age distribution across genders
+ggplot(d_subset, aes(x=age, fill=gender)) + geom_histogram(color="white", alpha=0.5) + ggtitle("Gender by age distribution (subsample)"); # very similar age distribution across genders
+
+ggplot(d_all, aes(x=education_years, fill=gender)) + geom_histogram(color="white", alpha=0.5) + ggtitle("Gender by education distribution (original)"); # very similar age distribution across genders
+ggplot(d_subset, aes(x=education_years, fill=gender)) + geom_histogram(color="white", alpha=0.5) + ggtitle("Gender by education distribution (subsample)"); # very similar age distribution across genders
+
+# -> very similar to the original dataset
+
+# let's redo the regression, mediations and path model...
+if( FORCE_COMPUTE_ALL || 
+    !file.exists("./cached_results/tone_pcr_subsample.rds") ) # computationally expensive
+{
+  # The data:
+  d <- na.omit(d_subset[,c("pcr", "age", "gender", "gender_n", "education_years", "location_ab", "location_bin", "wm_norm")]);
+  
+  ## Multiple regression:
+  # Manual simplification starting with the full model:
+  beta_ctrl_s  <- glmmTMBControl(optCtrl=list(iter.max=1e8,eval.max=1e8));
+  m_pcr_full_s <- glmmTMB(pcr ~ age * gender * education_years * location_ab * wm_norm, family=beta_family(), control=beta_ctrl_s, data=d); summary(m_pcr_full_s);
+  m_pcr_s <- update(m_pcr_full_s, . ~ . - 
+                    age:gender:education_years:location_ab:wm_norm - # 5-way interaction
+                    age:gender:location_ab:wm_norm - age:education_years:location_ab:wm_norm - gender:education_years:location_ab:wm_norm - age:gender:education_years:wm_norm - age:gender:education_years:location_ab - # 4-way interactions
+                    gender:location_ab:wm_norm - education_years:location_ab:wm_norm - age:location_ab:wm_norm - age:gender:location_ab - age:gender:wm_norm - 
+                    gender:education_years:wm_norm - age:education_years:wm_norm - age:gender:education_years - age:education_years:location_ab - gender:education_years:location_ab - # 3-way interactions
+                    age:wm_norm - gender:location_ab - age:location_ab - gender:wm_norm - education_years:wm_norm - location_ab:wm_norm - gender:education_years - education_years:location_ab # 2-way interactions
+  ); summary(m_pcr_s); (anova_m_pcr_s = anova(m_pcr_s, m_pcr_full_s));
+  sjPlot::plot_model(m_pcr_s, transform=NULL); 
+  sjPlot::plot_model(m_pcr_s, type="pred", terms=c("age", "gender"));
+  sjPlot::plot_model(m_pcr_s, type="pred", terms=c("education_years", "age"));
+  m_pcr_vif_s <- car::vif(lm(formula(m_pcr_s), data=d), type="predictor"); # refit as a linear model as glmmTMB does not currently work and switching to linear should not be an issue in this case: all < 3 except for gender (14.1) and education_years (5.2)
+
+  
+  ## Mediation models:
+  
+  ## gender is a proxy for education:
+  med_pcr__mediator_s <-  glm(education_years ~ gender_n, family=poisson(), data=d); summary(med_pcr__mediator_s); # poisson regression as education_years is a count
+  med_pcr__outcome_s  <- lm(pcr ~ gender_n + education_years, data=d); summary(med_pcr__outcome_s); # mediation::mediate cannot do beta regression so let's use linear regression instead...
+  summary(glmmTMB(pcr ~ gender_n + education_years, family=beta_family(), control=beta_ctrl_s, data=d)); # ... and the estimates and p-values are very similar between the two
+  med_pcr_gender_s <- mediation::mediate(med_pcr__mediator_s, med_pcr__outcome_s, mediator="education_years", treat="gender_n", outcome="pcr", sims=10000, robustSE=TRUE); summary(med_pcr_gender_s); plot(med_pcr_gender_s); # no direct effect
+  
+  # use linear regression (very similar estimates and p-values):
+  psem_pcr_gender_s <- piecewiseSEM::psem( # with indirect effect (aka partial mediation)
+    glm(education_years ~ gender_n, family=poisson(), data=d),
+    lm(pcr ~ gender_n + education_years, data=d),
+    data=d);
+  (summary_psem_pcr_gender_s <- summary(psem_pcr_gender_s, .progressBar = FALSE));
+  plot(psem_pcr_gender_s, show="unstd"); # standardized not available for education_years
+  psem_pcr_gender_full_s <- piecewiseSEM::psem( # just indirect effect (aka full mediation)
+    glm(education_years ~ gender_n, family=poisson(), data=d),
+    lm(pcr ~ education_years, data=d),
+    data=d);
+  (summary_psem_pcr_gender_full_s <- summary(psem_pcr_gender_full_s, .progressBar = FALSE));
+  piecewiseSEM::dSep(psem_pcr_gender_full_s, .progressBar = FALSE); # p = 0.90
+  plot(psem_pcr_gender_full_s, show="unstd"); # standardized not available for education_years
+  (psem_anova_pcr_gender_s <- anova(psem_pcr_gender_s, psem_pcr_gender_full_s)); # p = 0.90
+  # -> no direct effect of gender, but all is mediated through education
+  
+  
+  ## age has an independent effect from education:
+  med_pcr__mediator_s <-  glm(education_years ~ age, family=poisson(), data=d); summary(med_pcr__mediator_s); # poisson regression as education_years is a count
+  med_pcr__outcome_s  <- lm(pcr ~ age + education_years, data=d); summary(med_pcr__outcome_s); # mediation::mediate cannot do beta regression so let's use linear regression instead...
+  summary(glmmTMB(pcr ~ age + education_years, family=beta_family(), control=beta_ctrl_s, data=d)); # ... and the estimates and p-values are relatively (but not very) similar between the two
+  med_pcr_age_s <- mediation::mediate(med_pcr__mediator_s, med_pcr__outcome_s, mediator="education_years", treat="age", outcome="pcr", sims=10000, robustSE=TRUE); summary(med_pcr_age_s); plot(med_pcr_age_s); # positive direct effect and negative indirect effect
+  
+  # use linear regression (relatively similar estimates and p-values):
+  psem_pcr_age_s <- piecewiseSEM::psem( # with indirect effect (aka partial mediation)
+    glm(education_years ~ age, family=poisson(), data=d),
+    lm(pcr ~ age + education_years, data=d),
+    data=d);
+  (summary_psem_pcr_age_s <- summary(psem_pcr_age_s, .progressBar = FALSE));
+  plot(psem_pcr_age_s, show="unstd"); # standardized not available for education_years
+  psem_pcr_age_full_s <- piecewiseSEM::psem( # just indirect effect (aka full mediation)
+    glm(education_years ~ age, family=poisson(), data=d),
+    lm(pcr ~ education_years, data=d),
+    data=d);
+  (summary_psem_pcr_age_full_s <- summary(psem_pcr_age_full_s, .progressBar = FALSE));
+  piecewiseSEM::dSep(psem_pcr_age_full_s, .progressBar = FALSE); # p = 0.0048 **
+  plot(psem_pcr_age_full_s, show="unstd"); # standardized not available for education_years
+  (psem_anova_pcr_age_s <- anova(psem_pcr_age_s, psem_pcr_age_full_s)); # p = 0.0047 **
+  # -> there is a positive direct effect of age besides the mediated effect (older participants have less education)
+  
+  
+  ## location has an independent effect from education:
+  med_pcr__mediator_s <-  glm(education_years ~ location_bin, family=poisson(), data=d); summary(med_pcr__mediator_s); # poisson regression as education_years is a count
+  med_pcr__outcome_s  <- lm(pcr ~ location_bin + education_years, data=d); summary(med_pcr__outcome_s); # mediation::mediate cannot do beta regression so let's use linear regression instead...
+  summary(glmmTMB(pcr ~ location_bin + education_years, family=beta_family(), control=beta_ctrl_s, data=d)); # ... and the estimates and p-values are relatively (but not very) similar between the two
+  med_pcr_location_s <- mediation::mediate(med_pcr__mediator_s, med_pcr__outcome_s, mediator="education_years", treat="location_bin", outcome="pcr", sims=10000, robustSE=TRUE); summary(med_pcr_location_s); plot(med_pcr_location_s); # negative direct and indirect effects
+  
+  # use linear regression (relatively similar estimates and p-values):
+  psem_pcr_location_s <- piecewiseSEM::psem( # with indirect effect (aka partial mediation)
+    glm(education_years ~ location_bin, family=poisson(), data=d),
+    lm(pcr ~ location_bin + education_years, data=d),
+    data=d);
+  (summary_psem_pcr_location_s <- summary(psem_pcr_location_s, .progressBar = FALSE));
+  plot(psem_pcr_location_s, show="unstd"); # standardized not available for education_years
+  psem_pcr_location_full_s <- piecewiseSEM::psem( # just indirect effect (aka full mediation)
+    glm(education_years ~ location_bin, family=poisson(), data=d),
+    lm(pcr ~ education_years, data=d),
+    data=d);
+  (summary_psem_pcr_location_full_s <- summary(psem_pcr_location_full_s, .progressBar = FALSE));
+  piecewiseSEM::dSep(psem_pcr_location_full_s, .progressBar = FALSE); # p = 9.29e-05 ***
+  plot(psem_pcr_location_full_s, show="unstd"); # standardized not available for education_years
+  (psem_anova_pcr_location_s <- anova(psem_pcr_location_s, psem_pcr_location_full_s)); # p = 1e-04 ***
+  # -> the direct effect is needed
+  
+  ## working memory has a direct effect besides what education, age and gender would predict:
+  med_pcr__mediator_s <-  lm(wm_norm ~ education_years + gender_n + age, data=d); summary(med_pcr__mediator_s);
+  med_pcr__outcome_s  <- lm(pcr ~ wm_norm + education_years + gender_n + age, data=d); summary(med_pcr__outcome_s); # mediation::mediate cannot do beta regression so let's use linear regression instead...
+  summary(glmmTMB(pcr ~ wm_norm + education_years + gender_n + age, family=beta_family(), control=beta_ctrl_s, data=d)); # ... and the estimates and p-values are very similar between the two
+  med_pcr_wm_s <- mediation::mediate(med_pcr__mediator_s, med_pcr__outcome_s, mediator="wm_norm", treat="education_years", outcome="pcr", sims=10000, robustSE=TRUE); summary(med_pcr_wm_s); plot(med_pcr_wm_s);
+  
+  # use linear regression (relatively similar estimates and p-values):
+  psem_pcr_wm_s <- piecewiseSEM::psem( # with indirect effect (aka partial mediation)
+    lm(wm_norm ~ education_years + gender_n + age, data=d),
+    lm(pcr ~ wm_norm + education_years + gender_n + age, data=d),
+    data=d);
+  (summary_psem_pcr_wm_s <- summary(psem_pcr_wm_s, .progressBar = FALSE));
+  plot(psem_pcr_wm_s, show="unstd"); # standardized not available
+
+  
+  ## More complex path model:
+  # use linear regression (relatively similar estimates and p-values):
+  psem_pcr_path_s <- piecewiseSEM::psem(
+    glm(education_years ~ age + gender_n + location_bin, family=poisson(), data=d), # age + gender -> education
+    lm(age ~ location_bin + gender_n, data=d), # location + gender -> age
+    glm(gender_n ~ location_bin, family=binomial(), data=d), # location -> gender
+    lm(wm_norm ~ education_years + gender_n + age, data=d), # age + gender + education -> wm
+    lm(pcr ~ wm_norm + age + gender_n + education_years + location_bin, data=d), # all -> pcr
+    data=d);
+  (summary_psem_pcr_path_s <- summary(psem_pcr_path_s, .progressBar = FALSE));
+  plot(psem_pcr_path_s, show="unstd"); # standardized not available
+
+  
+  # save them to file:
+  tone_pcr_subsample <- list("multreg"=m_pcr_s, "vif"=m_pcr_vif_s, # multiple regression model
+                             "med_gender__education"=list("mediation"=summary(med_pcr_gender_s),
+                                                          "piecewise"=list("linearreg"=list("model"=psem_pcr_gender_s, "dsep.p"=piecewiseSEM::dSep(psem_pcr_gender_full_s, .progressBar = FALSE)$P.Value, "anova"=psem_anova_pcr_gender_s))),
+                             "med_age__education"=list("mediation"=summary(med_pcr_age_s),
+                                                       "piecewise"=list("linearreg"=list("model"=psem_pcr_age_s, "dsep.p"=piecewiseSEM::dSep(psem_pcr_age_full_s, .progressBar = FALSE)$P.Value, "anova"=psem_anova_pcr_age_s))),
+                             "med_location__education"=list("mediation"=summary(med_pcr_location_s),
+                                                            "piecewise"=list("linearreg"=list("model"=psem_pcr_location_s, "dsep.p"=piecewiseSEM::dSep(psem_pcr_location_full_s, .progressBar = FALSE)$P.Value, "anova"=psem_anova_pcr_location_s))),
+                             "med_wm__all"=list("mediation"=summary(med_pcr_wm_s),
+                                                "piecewise"=list("linearreg"=list("model"=psem_pcr_wm_s))),
+                             "path_model"=list("linearreg"=list("model"=psem_pcr_path_s, "summary"=summary_psem_pcr_path_s)),
+                             "data"=d);
+  saveRDS(tone_pcr_subsample, file=xzfile("./cached_results/tone_pcr_subsample.rds", compression=9));
+} else
+{
+  tone_pcr_subsample <- readRDS(xzfile("./cached_results/tone_pcr_subsample.rds"));
+}
+```
+
+#### Multiple regression
+
+```{r}
+summary(tone_pcr_subsample$multreg);
+```
+```{r fig.width=4, fig.height=4, fig.cap=capFig("Untransformed slopes with standard errors.")}
+p1 <- sjPlot::plot_model(tone_pcr_subsample$multreg, show.values=TRUE, value.offset=.2, vline.color="gray20", transform=NULL); p1;
+```
+```{r fig.width=4, fig.height=4, fig.cap=capFig("Predicted values of pcr showing the interaction of*gender* and *age*.")}
+p2 <- sjPlot::plot_model(tone_pcr_subsample$multreg, type="pred", terms=c("age", "gender")) + ylim(0,1); p2;
+```
+```{r fig.width=4, fig.height=4, fig.cap=capFig("Predicted values of pcr showing the interaction of *education_years* and *age*.")}
+p3 <- sjPlot::plot_model(tone_pcr_subsample$multreg, type="pred", terms=c("education_years", "age")) + ylim(0,1) + xlab("education years"); p3;
+```
+
+
+#### Mediation: gender → education → tone
+
+```{r}
+tone_pcr_subsample$med_gender__education$mediation;
+```
+```{r}
+summary(tone_pcr_subsample$med_gender__education$piecewise$linearreg$model, , .progressBar = FALSE);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("Mediation model of *gender*, *years of education* and *pcr* showing the *un*standardized coefficients (fitted using `piecewiseSEM::psem()`); dotted arrows are not significant.")}
+plot(tone_pcr_subsample$med_gender__education$piecewise$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=8, width=1), edge_attrs = data.frame(style = "solid", color = "gray80"),digits=2);
+```
+
+`r sprintf("d-sep *p*=%s, model comparison *χ*^2^(%d)=%.2g, *p*=%s", scinot(tone_pcr_subsample$med_gender__education$piecewise$linearreg$dsep.p), as.numeric(tone_pcr_subsample$med_gender__education$piecewise$linearreg$anova[[1]][2,"Df.diff"]), as.numeric(tone_pcr_subsample$med_gender__education$piecewise$linearreg$anova[[1]][2,"Chisq.diff"]), scinot(as.numeric(tone_pcr_subsample$med_gender__education$piecewise$linearreg$anova[[1]][2,"P.value"])))`
+
+#### Mediation: age → education → tone
+
+```{r}
+tone_pcr_subsample$med_age__education$mediation;
+```
+```{r}
+summary(tone_pcr_subsample$med_age__education$piecewise$linearreg$model, .progressBar = FALSE);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("Mediation model of *age*, *years of education* and *pcr* showing the *un*standardized coefficients (fitted using `piecewiseSEM::psem()`).")}
+plot(tone_pcr_subsample$med_age__education$piecewise$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=8, width=1), edge_attrs = data.frame(style = "solid", color = "gray80"),digits=2);
+```
+
+`r sprintf("d-sep *p*=%s, model comparison *χ*^2^(%d)=%.1f, *p*=%s", scinot(tone_pcr_subsample$med_age__education$piecewise$linearreg$dsep.p), as.numeric(tone_pcr_subsample$med_age__education$piecewise$linearreg$anova[[1]][2,"Df.diff"]), as.numeric(tone_pcr_subsample$med_age__education$piecewise$linearreg$anova[[1]][2,"Chisq.diff"]), tone_pcr_subsample$med_age__education$piecewise$linearreg$anova[[1]][2,"P.value"])`
+
+#### Mediation: location → education → tone
+
+```{r}
+tone_pcr_subsample$med_location__education$mediation;
+```
+```{r}
+summary(tone_pcr_subsample$med_location__education$piecewise$linearreg$model, .progressBar = FALSE);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("Mediation model of *age*, *years of education* and *pcr* showing the *un*standardized coefficients (fitted using `piecewiseSEM::psem()`).")}
+plot(tone_pcr_subsample$med_location__education$piecewise$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=8, width=1), edge_attrs = data.frame(style = "solid", color = "gray80"),digits=2);
+```
+
+`r sprintf("d-sep *p*=%s, model comparison *χ*^2^(%d)=%.1f, *p*=%s", scinot(tone_pcr_subsample$med_location__education$piecewise$linearreg$dsep.p), as.numeric(tone_pcr_subsample$med_location__education$piecewise$linearreg$anova[[1]][2,"Df.diff"]), as.numeric(tone_pcr_subsample$med_location__education$piecewise$linearreg$anova[[1]][2,"Chisq.diff"]), tone_pcr_subsample$med_location__education$piecewise$linearreg$anova[[1]][2,"P.value"])`
+
+#### Mediation: education, age, gender → working memory → tone
+
+```{r}
+tone_pcr_subsample$med_wm__all$mediation;
+```
+```{r}
+summary(tone_pcr_subsample$med_wm__all$piecewise$linearreg$model);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("Mediation model of *education*, *age*, *gender*, *wm* and *pcr* showing the *un*standardized coefficients (fitted using `piecewiseSEM::psem()`).")}
+plot(tone_pcr_subsample$med_wm__all$piecewise$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80"),digits=2);
+```
+
+#### Complex path model
+
+```{r}
+summary(tone_pcr_subsample$path_model$linearreg$model, .progressBar = FALSE);
+```
+```{r fig.width=5, fig.height=5, fig.cap=capFig("The complex path model for *pcr* showing the *un*standardized coefficients (fitted using `piecewiseSEM::psem()`).")}
+plot(tone_pcr_subsample$path_model$linearreg$model, show="unstd", node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "white", fontsize=6, width=0.65), edge_attrs = data.frame(style = "solid", color = "gray80", fontsize=6),digits=2);
+```
+
+#### Conclusions
+
+It can be seen that, with the limitations imposed by the smaller sample size on the significance of some effects (e.g., the gender → age path in the complex path model) and the slight variation in the estimates due to the sampling procedure, the results are virtually identical. 
+
 
 
 
